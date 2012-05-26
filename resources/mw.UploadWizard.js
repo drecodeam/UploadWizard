@@ -142,6 +142,8 @@ mw.UploadWizard.prototype = {
 			} );
 
 		$j( '#mwe-upwiz-add-file' ).button();
+		$j('#mwe-upwiz-upload-ctrl-flickr').button();
+		$j('#mwe-upwiz-upload-ctrl-flickr').show();
 
 		$j( '#mwe-upwiz-upload-ctrl' )
 			.button()
@@ -163,6 +165,11 @@ mw.UploadWizard.prototype = {
 				_this.startUploads();
 			} );
 
+		//Call Flickr Initiator function on click event
+		$j( '#mwe-upwiz-upload-ctrl-flickr' ).click( function() {
+				_this.flickrInterfaceInit();
+			} );
+		
 		$j( '#mwe-upwiz-stepdiv-file .mwe-upwiz-buttons .mwe-upwiz-button-next' ).click( function() {
 			_this.removeErrorUploads( function() {
 				_this.prepareAndMoveToDeeds();
@@ -424,7 +431,39 @@ mw.UploadWizard.prototype = {
 			callback();
 		}
 	},
+	
+	/**
+	 * Initiates the Interface to upload media from Flickr. 
+	 */
 
+	flickrInterfaceInit: function() {
+		_this=this;
+		$j('#mwe-upwiz-add-file-container,#mwe-upwiz-upload-ctrl-flickr').hide();
+		//$j('#mwe-upwiz-upload-ctrl-container').show();    
+		var flickr_input = '<input id="flickr_input"></input>';
+		var flickr_add= '<div id="mwe-upwiz-upload-add-flickr-container"><button id="mwe-upwiz-upload-add-flickr"></button></div>';
+		$j('#mwe-upwiz-files').prepend(flickr_input+flickr_add);
+		//this needs to be fixed
+		$j( '#mwe-upwiz-upload-add-flickr' ).button({ label:gM( 'mwe-upwiz-upload-flickr')});
+		$j( '#mwe-upwiz-upload-add-flickr' ).click( function() {
+		_this.flickrChecker();
+		} );
+	},
+	
+	/**
+	 * Responsible for fetching license of the provided media. 
+	 */
+	flickrChecker: function() {
+		_this=this;
+		var flickr_input_url=$j('#flickr_input').val();
+		//console.log(flickr_input_url);
+		var Checker=new mw.FlickrChecker;
+		Checker.getLicenses();
+		$j('body').bind('licenselistfilled',function(){Checker.checkFlickr(flickr_input_url,'','');});
+		
+	},
+	
+	
 	/**
 	 * If there are no uploads, make a new one
 	 */

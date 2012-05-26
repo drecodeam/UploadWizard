@@ -53,6 +53,7 @@ class UploadWizardHooks {
 				'resources/mw.UtilitiesTime.js',
 				'resources/mw.ErrorDialog.js',
 				'resources/mw.ConfirmCloseWindow.js',
+                                'resources/mw.FlickrChecker.js',
 
 				// mediawiki-specific interface helper (relies on mediawiki globals)
 				'resources/jquery/jquery.mwCoolCats.js',
@@ -412,6 +413,9 @@ class UploadWizardHooks {
 				'mwe-upwiz-file-too-large',
 				'prefs-uploads',
 				'prefs-upwiz-interface',
+                                'mwe-upwiz-add',
+                                'mwe-upwiz-upload-flickr',
+                                'mwe-upwiz-add-flickr'
 			),
 			'group' => 'ext.uploadWizard'
 		),
