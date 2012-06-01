@@ -295,6 +295,7 @@ mw.UploadWizardUploadInterface.prototype = {
 				return this.providedFile.name;
 			}
 		} else {
+			console.log(this.$fileInputCtrl.get(0).value);
 			return this.$fileInputCtrl.get(0).value;
 		}
 	},

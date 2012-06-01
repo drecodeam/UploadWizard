@@ -7,6 +7,7 @@
 mw.UploadWizard = function( config ) {
 
 	this.uploads = [];
+	console.log(this.uploads);
 	this.api = new mw.Api( { url: config.apiUrl, ajax: { timeout: 0 } } );
 
 	// making a sort of global for now, should be done by passing in config or fragments of config when needed
@@ -456,11 +457,11 @@ mw.UploadWizard.prototype = {
 	flickrChecker: function() {
 		_this=this;
 		var flickr_input_url=$j('#flickr_input').val();
-		//console.log(flickr_input_url);
 		var Checker=new mw.FlickrChecker;
 		Checker.getLicenses();
-		$j('body').bind('licenselistfilled',function(){Checker.checkFlickr(flickr_input_url,'','');});
-		
+		var upload=_this.newUpload();
+		console.log(upload);
+		$j('body').bind('licenselistfilled',function(){Checker.checkFlickr(flickr_input_url,'',upload);});		
 	},
 	
 	
@@ -486,15 +487,19 @@ mw.UploadWizard.prototype = {
 	 * @return the new upload
 	 */
 	newUpload: function( providedFile, reservedIndex ) {
+		console.log("new upload called");
 		var _this = this;
-
+		console.log(_this);
+		console.log(_this.uploads);
 		if ( _this.uploads.length >= _this.maxUploads ) {
 			return false;
 		}
 
 		var upload = new mw.UploadWizardUpload( _this, '#mwe-upwiz-filelist', providedFile, reservedIndex );
+		
 		_this.uploadToAdd = upload;
-
+		console.log('uploadtoAdd:')
+		console.log(_this.uploadToAdd);
 		// we explicitly move the file input to cover the upload button
 		upload.ui.moveFileInputToCover( '#mwe-upwiz-add-file' );
 

@@ -36,12 +36,15 @@ mw.FlickrChecker.prototype = {
  	 * @param upload - the upload object to set the deed for
 	 */
 	checkFlickr: function( url, $selector, upload ) {
+		_this = this;
+		console.log(upload);
 		console.log('flcikasdsadasd called');
 		var photoIdMatches = url.match(/flickr.com\/photos\/[^\/]+\/([0-9]+)/);
 		if ( photoIdMatches && photoIdMatches[1] > 0 ) {
 			var photoId = photoIdMatches[1];
 			$.getJSON( this.apiUrl, { 'nojsoncallback': 1, 'method': 'flickr.photos.getInfo', 'api_key': this.apiKey, 'photo_id': photoId, 'format': 'json' },
 				function( data ) {
+					console.log(data);
 					if ( typeof data.photo != 'undefined' ) {
 						// The returned data.photo.license is just an ID that we use to look up the license name
 						var licenseName = mw.FlickrChecker.prototype.licenseList[data.photo.license];
@@ -54,6 +57,15 @@ mw.FlickrChecker.prototype = {
 								licenseMessage = gM( 'mwe-upwiz-license-external-invalid', 'Flickr', licenseName );
 							} else {
 								licenseMessage = gM( 'mwe-upwiz-license-external', 'Flickr', licenseName );
+								var image_url='http://farm' + data.photo.farm + '.staticflickr.com/' + data.photo.server +'/'+ data.photo.id +'_' + data.photo.secret + '_b.jpg';
+								console.log(image_url);
+								/*upload.ui.$fileInputCtrl.val(image_url);
+								console.log(upload.ui.$fileInputCtrl.val());
+								upload.ui.$fileInputCtrl.change();
+								*/
+								_this.getInfo(data.photo.id,upload);
+								upload.ui.upload.checkFile(data.photo.title._content + '.jpg',image_url,function() { upload.ui.fileChangedOk(); },'' );
+
 							}
 							console.log(licenseMessage);
 							// XXX Do something with data.
@@ -62,6 +74,19 @@ mw.FlickrChecker.prototype = {
 				}
 			);
 		}
+	},
+	
+	/**
+	 * get the info of the validated image 
+	 */
+	getInfo : function(id,upload){
+		var photoId=id;
+		$.getJSON( this.apiUrl, { 'nojsoncallback': 1, 'method': 'flickr.photos.getSizes', 'api_key': this.apiKey, 'photo_id': photoId, 'format': 'json' },
+		function( data ) {
+			console.log(data)
+			
+
+		});
 	},
 
 	/**

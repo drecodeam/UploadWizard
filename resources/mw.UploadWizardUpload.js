@@ -291,11 +291,11 @@ mw.UploadWizardUpload.prototype = {
 	checkFile: function( filename, files, fileNameOk, fileNameErr ) {
 
 		var _this = this;
-
+		console.log(filename);
 		// Check if filename is acceptable
 		// TODO sanitize filename
 		var basename = mw.UploadWizardUtil.getBasename( filename );
-
+		console.log(basename);
 		if ( files.length > 1 ) {
 
 			var totalSize = 0;
@@ -327,6 +327,7 @@ mw.UploadWizardUpload.prototype = {
 
 		try {
 			this.title = new mw.Title( basename.replace( /:/g, '_' ), fileNsId );
+			console.log(this.title);
 		} catch ( e ) {
 			fileNameErr( 'unparseable' );
 		}
