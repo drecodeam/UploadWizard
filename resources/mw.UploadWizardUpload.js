@@ -84,7 +84,9 @@ mw.UploadWizardUpload.prototype = {
 		var _this = this;
 		_this.setTransportProgress(0.0);
 		//_this.ui.start();
+		mw.log(_this.handler);
 		_this.handler.start();
+		mw.log('upload start called');
 	},
 
 	/**
@@ -152,6 +154,7 @@ mw.UploadWizardUpload.prototype = {
 		// default error state
 		var code = 'unknown';
 		var info = 'unknown';
+		mw.log(result);
 
 		if ( result.upload && result.upload.warnings && result.upload.warnings.length !== 0 ) {
 			if ( result.upload.warnings['exists'] ) {
@@ -174,6 +177,7 @@ mw.UploadWizardUpload.prototype = {
 					} else {
 						result.upload.stashimageinfo = imageinfo;
 						_this.setSuccess( result );
+						console.log(result);
 					}
 				};
 				_this.getStashImageInfo( success, [ 'timestamp', 'url', 'size', 'dimensions', 'sha1', 'mime', 'metadata', 'bitdepth' ] );
@@ -267,6 +271,7 @@ mw.UploadWizardUpload.prototype = {
 		_this.ui.setStatus( 'mwe-upwiz-getting-metadata' );
 		if ( result.upload ) {
 			_this.extractUploadInfo( result.upload );
+			mw.log(result);
 			_this.deedPreview.setup();
 			_this.details.populate();
 			_this.state = 'stashed';
@@ -291,11 +296,9 @@ mw.UploadWizardUpload.prototype = {
 	checkFile: function( filename, files, fileNameOk, fileNameErr ) {
 
 		var _this = this;
-		console.log(filename);
 		// Check if filename is acceptable
 		// TODO sanitize filename
 		var basename = mw.UploadWizardUtil.getBasename( filename );
-		console.log(basename);
 		if ( files.length > 1 ) {
 
 			var totalSize = 0;
@@ -327,7 +330,6 @@ mw.UploadWizardUpload.prototype = {
 
 		try {
 			this.title = new mw.Title( basename.replace( /:/g, '_' ), fileNsId );
-			console.log(this.title);
 		} catch ( e ) {
 			fileNameErr( 'unparseable' );
 		}

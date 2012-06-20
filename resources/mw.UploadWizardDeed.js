@@ -57,6 +57,7 @@ mw.UploadWizardDeedOwnWork = function( uploadCount, api ) {
 		.addClass( 'mwe-upwiz-sign' );
 
 	var ownWork = mw.UploadWizard.config.licensesOwnWork;
+	console.log(mw.UploadWizard.config);
 	var licenseIsNotDefault = ( ownWork.licenses.length === 1 && ownWork.licenses[0] !== ownWork.defaults[0] );
 	_this.showCustomDiv = ownWork.licenses.length > 1 || licenseIsNotDefault;
 
@@ -65,7 +66,7 @@ mw.UploadWizardDeedOwnWork = function( uploadCount, api ) {
 
 		_this.licenseInput = new mw.UploadWizardLicenseInput(
 			licenseInputDiv,
-			undefined,
+			'{{flickrreview}}{{cc-by-2.0}}',
 			mw.UploadWizard.config.licensesOwnWork,
 			_this.uploadCount,
 			api
@@ -260,7 +261,7 @@ mw.UploadWizardDeedOwnWork = function( uploadCount, api ) {
  */
 mw.UploadWizardDeedThirdParty = function( uploadCount, api ) {
 	var _this = new mw.UploadWizardDeed();
-
+	console.log('UploadWizardDeedThirdParty called');
 	_this.uploadCount = uploadCount ? uploadCount : 1;
 	_this.sourceInput = $j('<textarea class="mwe-source mwe-long-textarea" name="source" rows="1" cols="40"></textarea>' )
 				.growTextArea();
@@ -268,7 +269,7 @@ mw.UploadWizardDeedThirdParty = function( uploadCount, api ) {
 				.growTextArea();
 	licenseInputDiv = $j( '<div class="mwe-upwiz-deed-license-groups"></div>' );
 	_this.licenseInput = new mw.UploadWizardLicenseInput( licenseInputDiv,
-							      undefined,
+							      '{{flickrreview}}{{cc-by-2.0}}',
 							      mw.UploadWizard.config.licensesThirdParty,
 							      _this.uploadCount,
 								  api );
@@ -360,7 +361,7 @@ mw.UploadWizardDeedChooser = function( selector, deeds, uploads, api ) {
 	var _this = this;
 	_this.$selector = $j( selector );
 	_this.uploads = uploads === undefined ? [] : uploads;
-
+        console.log('UploadWizardDeedChooser called');
 
 	_this.$errorEl = $j( '<div class="mwe-error"></div>' );
 	_this.$selector.append( _this.$errorEl );
@@ -388,10 +389,12 @@ mw.UploadWizardDeedChooser = function( selector, deeds, uploads, api ) {
 		);
 
 		var $deedSelector = _this.$selector.append( $deedInterface );
+                console.log(deed.name + 'interface added');
 
 		deed.setFormFields( $deedInterface.find( '.mwe-upwiz-deed-form' ) );
 
 		var selectDeedFunction = function() {
+                        console.log('selectDeedInterface function called');
 			_this.choose( deed );
 			_this.selectDeedInterface( $deedInterface );
 			$deedInterface.find( 'span.mwe-upwiz-deed-header input' ).attr( 'checked', true );

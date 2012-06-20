@@ -253,12 +253,16 @@ mw.UploadWizardUploadInterface.prototype = {
 		var _this = this;
 		_this.$fileInputCtrl.change( function() {
 			_this.clearErrors();
+			mw.log('initFileInputCtrl called');
 
 			_this.upload.checkFile(
 				_this.getFilename(),
 				_this.getFiles(),
-				function() { _this.fileChangedOk(); },
-				function( code, info ) { _this.fileChangedError( code, info ); }
+				function() { _this.fileChangedOk();
+				mw.log('filenameOk called');},
+				function( code, info ) { _this.fileChangedError( code, info );
+				mw.log('filename error called');
+				}
 			);
 		} );
 	},
@@ -275,6 +279,7 @@ mw.UploadWizardUploadInterface.prototype = {
 			} else {
 				$j.each( this.$fileInputCtrl.get(0).files, function( i, file ) {
 					files.push( file );
+					mw.log(file,'debug');
 				} );
 			}
 		}
@@ -295,7 +300,6 @@ mw.UploadWizardUploadInterface.prototype = {
 				return this.providedFile.name;
 			}
 		} else {
-			console.log(this.$fileInputCtrl.get(0).value);
 			return this.$fileInputCtrl.get(0).value;
 		}
 	},
@@ -315,7 +319,7 @@ mw.UploadWizardUploadInterface.prototype = {
 		if ( this.upload.imageinfo && this.upload.imageinfo.width && this.upload.imageinfo.height ) {
 			statusItems.push( this.upload.imageinfo.width + '\u00d7' + this.upload.imageinfo.height );
 		}
-		if ( this.upload.file ) {
+		if ( this.upload.file.size ) {
 			statusItems.push( mw.units.bytes( this.upload.file.size ) );
 		}
 
@@ -340,19 +344,21 @@ mw.UploadWizardUploadInterface.prototype = {
 	},
 
 	isPreviewable: function() {
+		mw.log('isPreviewable called','debug');
 		return mw.fileApi.isAvailable() && this.upload.file && mw.fileApi.isPreviewableFile( this.upload.file );
 	},
 
 	makePreview: function() {
 		var _this = this;
-
 		// don't run this repeatedly.
 		if( _this.previewLoaded ) {
+
 			return;
 		}
 
 		// do preview if we can
 		if ( _this.isPreviewable() ) {
+			mw.log('makePreview called');
 			var dataUrlReader = new FileReader();
 			dataUrlReader.onload = function() {
 				var image = document.createElement( 'img' );
@@ -364,6 +370,7 @@ mw.UploadWizardUploadInterface.prototype = {
 				// this step (inserting image-as-dataurl into image object) is slow for large images, which
 				// is why this is optional and has a control attached to it to load the preview.
 				image.src = dataUrlReader.result;
+				mw.log(dataUrlReader.result);
 				_this.upload.thumbnails['*'] = image;
 			};
 			dataUrlReader.readAsDataURL( _this.upload.file );
@@ -514,6 +521,7 @@ mw.UploadWizardUploadInterface.prototype = {
 	 *      TODO silently fix to have unique filename? unnecessary at this point...
 	 */
 	updateFilename: function() {
+		mw.log('updateFilename called');
 		var _this = this;
 		var path = this.getFilename();
 		// get basename of file; some browsers do this C:\fakepath\something
@@ -528,7 +536,6 @@ mw.UploadWizardUploadInterface.prototype = {
 		// Also, it avoids a problem -- the API only returns one error at a time and it thinks that the same-filename error is more important than same-content.
 		// But for UploadWizard, at this stage, it's the reverse. We want to stop same-content dead, but for now we ignore same-filename
 		$j( _this.filenameCtrl ).val( ( new Date() ).getTime().toString() + path );
-
 		// deal with styling the file inputs and making it react to mouse
 		if ( ! _this.isFilled ) {
 			var $div = $j( _this.div );

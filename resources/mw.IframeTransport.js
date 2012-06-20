@@ -34,6 +34,7 @@ mw.IframeTransport = function( $form, progressCb, transportedCb ) {
 		    .css( 'display', 'none' );
 
 	$j( "body" ).append( iframe );
+	
 };
 
 mw.IframeTransport.prototype = {
@@ -48,6 +49,7 @@ mw.IframeTransport.prototype = {
 		// attach an additional handler to the form, so, when submitted, it starts showing the progress
 		// XXX this is lame .. there should be a generic way to indicate busy status...
 		this.$form.submit( function() {
+			mw.log('form submit called','debug');
 			// mw.log( "mw.IframeTransport::configureForm> submitting to iframe...", "debug" );
 			return true;
 		} );
@@ -69,6 +71,7 @@ mw.IframeTransport.prototype = {
 	 */
 	processIframeResult: function( iframe ) {
 		var _this = this;
+		mw.log(iframe,'debug');
 		var doc = iframe.contentDocument ? iframe.contentDocument : frames[iframe.id].document;
 		// Fix for Opera 9.26
 		if ( doc.readyState && doc.readyState != 'complete' ) {
@@ -103,6 +106,7 @@ mw.IframeTransport.prototype = {
 			// Response is a xml document
 			response = doc;
 		}
+		mw.log(response,'debug');
 		// Process the API result
 		_this.transportedCb( response );
 	}

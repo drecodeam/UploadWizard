@@ -441,7 +441,7 @@ return array(
 	),
 
 	// Set skipTutorial to true to always skip tutorial step
-	'skipTutorial' => false,
+	'skipTutorial' => true,
 
 	// Wiki page for leaving Upload Wizard feedback, for example 'Commons:Upload wizard feedback'
 	'feedbackPage' => '',
@@ -471,7 +471,7 @@ return array(
 	'blacklistIssuesPage' => '',
 
 	// should File API uploads be available?  Required for chunked uploading and multi-file select
-	'enableFormData' => true,
+	'enableFormData' => false,
 
 	// should multi-file select be available in supporting browsers?
 	'enableMultiFileSelect' => true,

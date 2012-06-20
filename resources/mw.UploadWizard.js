@@ -7,7 +7,6 @@
 mw.UploadWizard = function( config ) {
 
 	this.uploads = [];
-	console.log(this.uploads);
 	this.api = new mw.Api( { url: config.apiUrl, ajax: { timeout: 0 } } );
 
 	// making a sort of global for now, should be done by passing in config or fragments of config when needed
@@ -170,7 +169,7 @@ mw.UploadWizard.prototype = {
 		$j( '#mwe-upwiz-upload-ctrl-flickr' ).click( function() {
 				_this.flickrInterfaceInit();
 			} );
-		
+
 		$j( '#mwe-upwiz-stepdiv-file .mwe-upwiz-buttons .mwe-upwiz-button-next' ).click( function() {
 			_this.removeErrorUploads( function() {
 				_this.prepareAndMoveToDeeds();
@@ -308,6 +307,7 @@ mw.UploadWizard.prototype = {
 	 * @return {Array}
 	 */
 	getLicensingDeeds: function( uploadsLength ) {
+		console.log('2 . getLicensingDeeds called');
 		var deeds = [],
 			doOwnWork = false,
 			doThirdParty = false;
@@ -322,10 +322,12 @@ mw.UploadWizard.prototype = {
 
 		if ( doOwnWork ) {
 			deeds.push( new mw.UploadWizardDeedOwnWork( uploadsLength, this.api ) );
-		}
+                        console.log(deeds);
+                }
 		if ( doThirdParty ) {
 			deeds.push( new mw.UploadWizardDeedThirdParty( uploadsLength, this.api ) );
-		}
+                        console.log(deeds);
+                }
 
 		return deeds;
 	},
@@ -333,9 +335,11 @@ mw.UploadWizard.prototype = {
 	// do some last minute prep before advancing to the DEEDS page
 	prepareAndMoveToDeeds: function() {
 		var _this = this;
+		console.log('1. prepareAndMoveToDeeds called');
 		var deeds = _this.getLicensingDeeds( _this.uploads.length );
 
 		this.shouldShowIndividualDeed = function() {
+                        console.log('3. shouldShowIndividualDeed called');
 			if ( mw.UploadWizard.config.ownWorkOption == 'choice' ) {
 				return true;
 			}
@@ -357,6 +361,7 @@ mw.UploadWizard.prototype = {
 				name: 'custom'
 			} );
 			deeds.push( customDeed );
+                        console.log(deeds);
 		}
 
 		var uploadsClone = $j.map( _this.uploads, function( x ) { return x; } );
@@ -432,15 +437,15 @@ mw.UploadWizard.prototype = {
 			callback();
 		}
 	},
-	
+
 	/**
-	 * Initiates the Interface to upload media from Flickr. 
+	 * Initiates the Interface to upload media from Flickr.
 	 */
 
 	flickrInterfaceInit: function() {
 		_this=this;
 		$j('#mwe-upwiz-add-file-container,#mwe-upwiz-upload-ctrl-flickr').hide();
-		//$j('#mwe-upwiz-upload-ctrl-container').show();    
+		//$j('#mwe-upwiz-upload-ctrl-container').show();
 		var flickr_input = '<input id="flickr_input"></input>';
 		var flickr_add= '<div id="mwe-upwiz-upload-add-flickr-container"><button id="mwe-upwiz-upload-add-flickr"></button></div>';
 		$j('#mwe-upwiz-files').prepend(flickr_input+flickr_add);
@@ -450,21 +455,19 @@ mw.UploadWizard.prototype = {
 		_this.flickrChecker();
 		} );
 	},
-	
+
 	/**
-	 * Responsible for fetching license of the provided media. 
+	 * Responsible for fetching license of the provided media.
 	 */
 	flickrChecker: function() {
 		_this=this;
 		var flickr_input_url=$j('#flickr_input').val();
-		var Checker=new mw.FlickrChecker;
+		var Checker=new mw.FlickrChecker(_this,flickr_input_url);
 		Checker.getLicenses();
-		var upload=_this.newUpload();
-		console.log(upload);
-		$j('body').bind('licenselistfilled',function(){Checker.checkFlickr(flickr_input_url,'',upload);});		
+		$j('body').bind('licenselistfilled',function(){Checker.checkFlickr();});
 	},
-	
-	
+
+
 	/**
 	 * If there are no uploads, make a new one
 	 */
@@ -487,19 +490,14 @@ mw.UploadWizard.prototype = {
 	 * @return the new upload
 	 */
 	newUpload: function( providedFile, reservedIndex ) {
-		console.log("new upload called");
 		var _this = this;
-		console.log(_this);
-		console.log(_this.uploads);
 		if ( _this.uploads.length >= _this.maxUploads ) {
 			return false;
 		}
 
 		var upload = new mw.UploadWizardUpload( _this, '#mwe-upwiz-filelist', providedFile, reservedIndex );
-		
+
 		_this.uploadToAdd = upload;
-		console.log('uploadtoAdd:')
-		console.log(_this.uploadToAdd);
 		// we explicitly move the file input to cover the upload button
 		upload.ui.moveFileInputToCover( '#mwe-upwiz-add-file' );
 
@@ -667,6 +665,7 @@ mw.UploadWizard.prototype = {
 	 */
 	startUploads: function() {
 		var _this = this;
+		mw.log('startUploads called','debug');
 
 		// remove the upload button, and the add file button
 		$j( '#mwe-upwiz-upload-ctrls' ).hide();
@@ -1106,6 +1105,7 @@ mw.UploadWizardDeedPreview = function(upload) {
 mw.UploadWizardDeedPreview.prototype = {
 
 	setup: function() {
+		console.log('uploadwizarddeedpreview setup function called');
 		// prepare a preview on the deeds page
 		this.$thumbnailDiv = $j( '<div></div>' ).addClass( 'mwe-upwiz-thumbnail' );
 		this.upload.setThumbnail(

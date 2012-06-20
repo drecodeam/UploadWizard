@@ -1,7 +1,13 @@
 ( function( mw, $ ) {
 
 
-mw.FlickrChecker= function(){
+mw.FlickrChecker= function(wizard,url,$selector,upload){
+_this=this;
+_this.wizard= wizard;
+mw.log(wizard,'debug');
+_this.url=url;
+_this.upload=upload;
+
 };
 
 mw.FlickrChecker.prototype = {
@@ -35,16 +41,15 @@ mw.FlickrChecker.prototype = {
  	 * @param $selector - the element to insert the license name into
  	 * @param upload - the upload object to set the deed for
 	 */
-	checkFlickr: function( url, $selector, upload ) {
+	checkFlickr: function() {
+		mw.log('checkFlickr called','debug');
 		_this = this;
-		console.log(upload);
-		console.log('flcikasdsadasd called');
-		var photoIdMatches = url.match(/flickr.com\/photos\/[^\/]+\/([0-9]+)/);
+		var photoIdMatches = _this.url.match(/flickr.com\/photos\/[^\/]+\/([0-9]+)/);
 		if ( photoIdMatches && photoIdMatches[1] > 0 ) {
 			var photoId = photoIdMatches[1];
 			$.getJSON( this.apiUrl, { 'nojsoncallback': 1, 'method': 'flickr.photos.getInfo', 'api_key': this.apiKey, 'photo_id': photoId, 'format': 'json' },
 				function( data ) {
-					console.log(data);
+					mw.log(data,'debug');
 					if ( typeof data.photo != 'undefined' ) {
 						// The returned data.photo.license is just an ID that we use to look up the license name
 						var licenseName = mw.FlickrChecker.prototype.licenseList[data.photo.license];
@@ -52,22 +57,26 @@ mw.FlickrChecker.prototype = {
 							// Use the license name to retrieve the template values
 							var licenseValue = mw.FlickrChecker.prototype.licenseMaps[licenseName];
 							// Set the license message to show the user.
+							console.log(licenseName);
 							var licenseMessage;
 							if ( licenseValue == 'invalid' ) {
 								licenseMessage = gM( 'mwe-upwiz-license-external-invalid', 'Flickr', licenseName );
+								mw.log(licenseMessage,'debug');
 							} else {
 								licenseMessage = gM( 'mwe-upwiz-license-external', 'Flickr', licenseName );
+								
 								var image_url='http://farm' + data.photo.farm + '.staticflickr.com/' + data.photo.server +'/'+ data.photo.id +'_' + data.photo.secret + '_b.jpg';
-								console.log(image_url);
-								/*upload.ui.$fileInputCtrl.val(image_url);
-								console.log(upload.ui.$fileInputCtrl.val());
-								upload.ui.$fileInputCtrl.change();
-								*/
-								_this.getInfo(data.photo.id,upload);
-								upload.ui.upload.checkFile(data.photo.title._content + '.jpg',image_url,function() { upload.ui.fileChangedOk(); },'' );
-
+								_this.file={
+									name:data.photo.title._content + '.JPG',
+									url:image_url
+								}
+								
+								_this.upload = _this.wizard.newUpload(_this.file);
+								_this.upload.LicenseValues={
+									licenseValue:true
+								}
+								_this.getInfo(data.photo.id );
 							}
-							console.log(licenseMessage);
 							// XXX Do something with data.
 						}
 					}
@@ -81,11 +90,9 @@ mw.FlickrChecker.prototype = {
 	 */
 	getInfo : function(id,upload){
 		var photoId=id;
-		$.getJSON( this.apiUrl, { 'nojsoncallback': 1, 'method': 'flickr.photos.getSizes', 'api_key': this.apiKey, 'photo_id': photoId, 'format': 'json' },
+		$.getJSON( this.apiUrl, { 'nojsoncallback': 1, 'method': 'flickr.photos.getExif', 'api_key': this.apiKey, 'photo_id': photoId, 'format': 'json' },
 		function( data ) {
-			console.log(data)
-			
-
+			mw.log(data,'debug');
 		});
 	},
 
@@ -95,7 +102,6 @@ mw.FlickrChecker.prototype = {
 	getLicenses: function() {
 		$.getJSON( this.apiUrl, { 'nojsoncallback': 1, 'method': 'flickr.photos.licenses.getInfo', 'api_key': this.apiKey, 'format': 'json' },
 			function( data ) {
-				console.log(data);
 				if ( typeof data.licenses != 'undefined' ) {
 					$.each( data.licenses.license, function(index, value) {
 						mw.FlickrChecker.prototype.licenseList[value.id] = value.name;
