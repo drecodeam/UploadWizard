@@ -59,7 +59,6 @@ mw.ApiUploadFormDataHandler.prototype = {
             _this.transport.upload();
         };
         var err = function( code, info ) {
-	    mw.log('error' + code,'debug');
             _this.upload.setError( code, info );
         };
         this.configureEditToken( ok, err );

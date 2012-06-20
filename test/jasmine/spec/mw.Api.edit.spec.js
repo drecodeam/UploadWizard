@@ -74,7 +74,7 @@
 						if ( code == 'http' && info.textStatus == 'timeout' ) {
 							timedOut = true;
 						} else {
-							mw.log( "unexpected error that wasn't a timeout" );
+							console.log( "unexpected error that wasn't a timeout" );
 						}
 					};
 
@@ -116,7 +116,7 @@
 						if ( code == 'http' && info && info.xhr && info.xhr.status == '500' ) {
 							serverError = true;
 						} else {
-							mw.log( "unexpected error that wasn't a server error" );
+							console.log( "unexpected error that wasn't a server error" );
 						}
 					};
 

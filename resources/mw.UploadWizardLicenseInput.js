@@ -24,7 +24,6 @@ mw.UploadWizardLicenseInput = function( selector, values, config, count, api ) {
 	_this.count = count;
 
 	_this.api = api;
-	mw.log(config,'debug');
 
 	if ( config.type === undefined
 		 || config.defaults === undefined
@@ -54,7 +53,6 @@ mw.UploadWizardLicenseInput = function( selector, values, config, count, api ) {
 
 	// set values of the whole license input
 	if ( values ) {
-		console.log('_this.setValues called');
 		_this.setValues( values );
 	}
 
@@ -316,7 +314,6 @@ mw.UploadWizardLicenseInput.prototype = {
 		// ugly division between radio and checkbox, because in jquery 1.6.4 if you set any element of a radio input to false, every element
 		// is set to false! Unfortunately the incoming data structure is a key-val object so we have to make extra sure it makes sense for
 		// a radio button input.
-		mw.log(values,'debug');
 
 		if ( _this.type === 'radio' ) {
 
@@ -358,7 +355,6 @@ mw.UploadWizardLicenseInput.prototype = {
 	 * Set the default configured licenses
 	 */
 	setDefaultValues: function() {
-                console.log('setDefaultValues called');
 		var _this = this;
 		var values = {};
 		$j.each( _this.defaults, function( i, lic ) {

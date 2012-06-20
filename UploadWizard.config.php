@@ -441,7 +441,7 @@ return array(
 	),
 
 	// Set skipTutorial to true to always skip tutorial step
-	'skipTutorial' => true,
+	'skipTutorial' => false,
 
 	// Wiki page for leaving Upload Wizard feedback, for example 'Commons:Upload wizard feedback'
 	'feedbackPage' => '',
@@ -471,7 +471,7 @@ return array(
 	'blacklistIssuesPage' => '',
 
 	// should File API uploads be available?  Required for chunked uploading and multi-file select
-	'enableFormData' => false,
+	'enableFormData' => true,
 
 	// should multi-file select be available in supporting browsers?
 	'enableMultiFileSelect' => true,
@@ -482,5 +482,8 @@ return array(
 
 	// Should feature to copy metadata across a batch of uploads be enabled?
 	'copyMetadataFeature' => true,
+
+	// Should downloads start immediately when added?
+	'startImmediately' => true,
 
 );

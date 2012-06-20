@@ -98,7 +98,7 @@
 	};
 
 	// Logging is silent by default -- if you're debugging an app, figure out a way to turn it on
-	mw.log.level = 100;
+	mw.log.level = 0;
 
 	/**
 	 * Convenience function for logging cases where you want to repeatedly log with a prefix for each message,

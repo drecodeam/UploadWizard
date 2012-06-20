@@ -11,7 +11,6 @@
  * @param an UploadInterface object, which contains a .form property which points to a real HTML form in the DOM
  */
 mw.ApiUploadHandler = function( upload, api ) {
-	mw.log('apiuploadhandler called','debug');
 	this.upload = upload;
 	this.api = api;
 	this.$form = $j( this.upload.ui.form );
@@ -20,7 +19,6 @@ mw.ApiUploadHandler = function( upload, api ) {
 	// the Iframe transport is hardcoded for now because it works everywhere
 	// can also use Xhr Binary depending on browser
 	var _this = this;
-	mw.log(this.$form,'debug');
 	this.transport = new mw.IframeTransport(
 		this.$form,
 		function( fraction ) {
@@ -45,18 +43,13 @@ mw.ApiUploadHandler.prototype = {
 		_this.addFormInputIfMissing( 'action', 'upload' );
 
 		// force stash
-		//_this.addFormInputIfMissing( 'stash', 1 );
+		_this.addFormInputIfMissing( 'stash', 1 );
 
 		// XXX TODO - remove; if we are uploading to stash only, a comment should not be required - yet.
-		//_this.addFormInputIfMissing( 'comment', 'DUMMY TEXT' );
+		_this.addFormInputIfMissing( 'comment', 'DUMMY TEXT' );
 
 		// we use JSON in HTML because according to mdale, some browsers cannot handle just JSON
 		_this.addFormInputIfMissing( 'format', 'jsonfm' );
-		mw.log(_this.upload,'debug');
-		if(_this.upload.file){
-			_this.addFormInputIfMissing( 'url', _this.upload.file.url );
-		}
-
 	},
 
 	/**
@@ -81,7 +74,6 @@ mw.ApiUploadHandler.prototype = {
 	 * @param value the value of the input
 	 */
 	addFormInputIfMissing: function( name, value ) {
-		mw.log(name + value,'debug');
 		if ( this.$form.find( "[name='" + name + "']" ).length === 0 ) {
 			this.$form.append( $j( '<input type="hidden" />' ) .attr( { 'name': name, 'value': value } ));
 		}
@@ -91,17 +83,14 @@ mw.ApiUploadHandler.prototype = {
 	 * Kick off the upload!
 	 */
 	start: function() {
-		mw.log('apiuploadhandler called','debug');
 		var _this = this;
 		var ok = function() {
 			_this.beginTime = ( new Date() ).getTime();
 			_this.upload.ui.setStatus( 'mwe-upwiz-transport-started' );
 			_this.upload.ui.showTransportProgress();
-			mw.log(_this.$form,'debug');
 			_this.$form.submit();
 		};
 		var err = function( code, info ) {
-			mw.log(code,'debug');
 			_this.upload.setError( code, info );
 		};
 		this.configureEditToken( ok, err );

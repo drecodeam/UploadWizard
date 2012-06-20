@@ -42,7 +42,6 @@ mw.GroupProgressBar.prototype = {
 	 * loop around the uploads, summing certain properties for a weighted total fraction
 	 */
 	start: function() {
-		mw.log('progressbar start called','debug');
 		var _this = this;
 
 		var totalWeight = 0.0;

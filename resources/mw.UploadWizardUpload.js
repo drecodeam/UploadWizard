@@ -82,11 +82,17 @@ mw.UploadWizardUpload.prototype = {
 	 */
 	start: function() {
 		var _this = this;
+		if ( mw.UploadWizard.config.startImmediately === true ) {
+			$j('#mwe-upwiz-stepdiv-file .mwe-upwiz-buttons').hide();
+			_this.wizard.startProgressBar();
+			_this.wizard.allowCloseWindow = mw.confirmCloseWindow( {
+				message: function() { return gM( 'mwe-upwiz-prevent-close', _this.wizard.uploads.length ); },
+				test: function() { return _this.wizard.uploads.length > 0; }
+			} );
+		}
 		_this.setTransportProgress(0.0);
 		//_this.ui.start();
-		mw.log(_this.handler);
 		_this.handler.start();
-		mw.log('upload start called');
 	},
 
 	/**
@@ -108,6 +114,11 @@ mw.UploadWizardUpload.prototype = {
 		// trigger through the div. Triggering through objects doesn't always work.
 		// TODO v.1.1 fix, don't need to use the div any more -- this now works in jquery 1.4.2
 		$j( this.ui.div ).trigger( 'removeUploadEvent' );
+		
+		if ( mw.UploadWizard.config.startImmediately === true ) {
+			// check all uploads, if they're complete, show the next button
+			this.wizard.showNext( 'file', 'stashed' );
+		}
 	},
 
 
@@ -154,7 +165,6 @@ mw.UploadWizardUpload.prototype = {
 		// default error state
 		var code = 'unknown';
 		var info = 'unknown';
-		mw.log(result);
 
 		if ( result.upload && result.upload.warnings && result.upload.warnings.length !== 0 ) {
 			if ( result.upload.warnings['exists'] ) {
@@ -177,7 +187,6 @@ mw.UploadWizardUpload.prototype = {
 					} else {
 						result.upload.stashimageinfo = imageinfo;
 						_this.setSuccess( result );
-						console.log(result);
 					}
 				};
 				_this.getStashImageInfo( success, [ 'timestamp', 'url', 'size', 'dimensions', 'sha1', 'mime', 'metadata', 'bitdepth' ] );
@@ -271,7 +280,6 @@ mw.UploadWizardUpload.prototype = {
 		_this.ui.setStatus( 'mwe-upwiz-getting-metadata' );
 		if ( result.upload ) {
 			_this.extractUploadInfo( result.upload );
-			mw.log(result);
 			_this.deedPreview.setup();
 			_this.details.populate();
 			_this.state = 'stashed';
@@ -296,9 +304,19 @@ mw.UploadWizardUpload.prototype = {
 	checkFile: function( filename, files, fileNameOk, fileNameErr ) {
 
 		var _this = this;
+
+		function finishCallback () {
+			if ( _this && _this.ui ) {
+				fileNameOk();
+			} else {
+				setTimeout( finishCallback, 200 );
+			}
+		}
+
 		// Check if filename is acceptable
 		// TODO sanitize filename
 		var basename = mw.UploadWizardUtil.getBasename( filename );
+
 		if ( files.length > 1 ) {
 
 			var totalSize = 0;
@@ -409,7 +427,7 @@ mw.UploadWizardUpload.prototype = {
 							}
 							_this.extractMetadataFromJpegMeta( meta );
 							_this.filename = filename;
-							fileNameOk();
+							finishCallback();
 						};
 						if ( 'readAsBinaryString' in binReader ) {
 							binReader.readAsBinaryString( _this.file );
@@ -420,7 +438,7 @@ mw.UploadWizardUpload.prototype = {
 							throw new Error( 'Cannot read thumbnail as binary string or array buffer.' );
 						}
 					} else {
-						fileNameOk();
+						finishCallback();
 					}
 
 					// Now that first file has been prepared, process remaining files
@@ -447,7 +465,7 @@ mw.UploadWizardUpload.prototype = {
 
 				} else {
 					this.filename = filename;
-					fileNameOk();
+					finishCallback();
 				}
 
 			}
@@ -739,7 +757,7 @@ mw.UploadWizardUpload.prototype = {
 			var constructor;  // must be the name of a function in 'mw' namespace
 			if( mw.UploadWizard.config[ 'enableFirefogg' ] && mw.Firefogg.isInstalled() ) {
 				constructor = 'FirefoggHandler';
-			} else if( mw.UploadWizard.config[ 'enableFormData' ] && mw.fileApi.isFormDataAvailable()) {
+			} else if( mw.UploadWizard.config[ 'enableFormData' ] && mw.fileApi.isAvailable() && mw.fileApi.isFormDataAvailable()) {
 				constructor = 'ApiUploadFormDataHandler';
 			} else {
 				constructor = 'ApiUploadHandler';

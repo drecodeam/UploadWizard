@@ -1,19 +1,10 @@
 ( function( mw, $ ) {
 
+mw.FlickrChecker = {
 
-mw.FlickrChecker= function(wizard,url,$selector,upload){
-_this=this;
-_this.wizard= wizard;
-mw.log(wizard,'debug');
-_this.url=url;
-_this.upload=upload;
-
-};
-
-mw.FlickrChecker.prototype = {
-	licenseList: new Array(),
 	apiUrl: 'http://api.flickr.com/services/rest/?',
 	apiKey: 'e9d8174a79c782745289969a45d350e8',
+	licenseList: new Array(),
 
 	// Map each Flickr license name to the equivalent templates.
 	// These are the current Flickr license names as of April 26, 2011.
@@ -41,41 +32,24 @@ mw.FlickrChecker.prototype = {
  	 * @param $selector - the element to insert the license name into
  	 * @param upload - the upload object to set the deed for
 	 */
-	checkFlickr: function() {
-		mw.log('checkFlickr called','debug');
-		_this = this;
-		var photoIdMatches = _this.url.match(/flickr.com\/photos\/[^\/]+\/([0-9]+)/);
+	checkFlickr: function( url, $selector, upload ) {
+		var photoIdMatches = url.match(/flickr.com\/photos\/[^\/]+\/([0-9]+)/);
 		if ( photoIdMatches && photoIdMatches[1] > 0 ) {
 			var photoId = photoIdMatches[1];
 			$.getJSON( this.apiUrl, { 'nojsoncallback': 1, 'method': 'flickr.photos.getInfo', 'api_key': this.apiKey, 'photo_id': photoId, 'format': 'json' },
 				function( data ) {
-					mw.log(data,'debug');
 					if ( typeof data.photo != 'undefined' ) {
 						// The returned data.photo.license is just an ID that we use to look up the license name
-						var licenseName = mw.FlickrChecker.prototype.licenseList[data.photo.license];
+						var licenseName = mw.FlickrChecker.licenseList[data.photo.license];
 						if ( typeof licenseName != 'undefined' ) {
 							// Use the license name to retrieve the template values
-							var licenseValue = mw.FlickrChecker.prototype.licenseMaps[licenseName];
+							var licenseValue = mw.FlickrChecker.licenseMaps[licenseName];
 							// Set the license message to show the user.
-							console.log(licenseName);
 							var licenseMessage;
 							if ( licenseValue == 'invalid' ) {
 								licenseMessage = gM( 'mwe-upwiz-license-external-invalid', 'Flickr', licenseName );
-								mw.log(licenseMessage,'debug');
 							} else {
 								licenseMessage = gM( 'mwe-upwiz-license-external', 'Flickr', licenseName );
-								
-								var image_url='http://farm' + data.photo.farm + '.staticflickr.com/' + data.photo.server +'/'+ data.photo.id +'_' + data.photo.secret + '_b.jpg';
-								_this.file={
-									name:data.photo.title._content + '.JPG',
-									url:image_url
-								}
-								
-								_this.upload = _this.wizard.newUpload(_this.file);
-								_this.upload.LicenseValues={
-									licenseValue:true
-								}
-								_this.getInfo(data.photo.id );
 							}
 							// XXX Do something with data.
 						}
@@ -83,17 +57,6 @@ mw.FlickrChecker.prototype = {
 				}
 			);
 		}
-	},
-	
-	/**
-	 * get the info of the validated image 
-	 */
-	getInfo : function(id,upload){
-		var photoId=id;
-		$.getJSON( this.apiUrl, { 'nojsoncallback': 1, 'method': 'flickr.photos.getExif', 'api_key': this.apiKey, 'photo_id': photoId, 'format': 'json' },
-		function( data ) {
-			mw.log(data,'debug');
-		});
 	},
 
 	/**
@@ -104,10 +67,9 @@ mw.FlickrChecker.prototype = {
 			function( data ) {
 				if ( typeof data.licenses != 'undefined' ) {
 					$.each( data.licenses.license, function(index, value) {
-						mw.FlickrChecker.prototype.licenseList[value.id] = value.name;
+						mw.FlickrChecker.licenseList[value.id] = value.name;
 					} );
 				}
-			$j('body').trigger('licenselistfilled');
 			}
 		);
 	}
