@@ -386,6 +386,10 @@ class SpecialUploadWizard extends SpecialPage {
 		.            '<div id="mwe-upwiz-add-file-container" class="mwe-upwiz-add-files-0">'
 		.              '<button id="mwe-upwiz-add-file">' . wfMsg( "mwe-upwiz-add-file-0-free" ) . '</button>'
 		.  	     '</div>'
+		.	     '<div id="mwe-upwiz-upload-ctrl-flickr-container">'
+		.		'<p id="mwe-upwiz-upload-ctr-divide">' . wfMsg( "mwe-upwiz-add-flickr-or" ) . '</p>'
+		.		'<button id="mwe-upwiz-upload-ctrl-flickr">' . wfMsg( "mwe-upwiz-add-flickr" ) . '</button>'
+		.	     '</div>'
 		.        '<div id="mwe-upwiz-upload-ctrl-container">'
 		.           '<button id="mwe-upwiz-upload-ctrl">' . wfMsg( "mwe-upwiz-upload" ) . '</button>'
 		.         '</div>'
@@ -470,5 +474,3 @@ class UploadWizardSimpleForm extends UploadForm {
 	protected function addUploadJS( ) { }
 
 }
-
-

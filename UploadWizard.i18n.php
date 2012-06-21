@@ -43,6 +43,9 @@ $messages['en'] = array(
 	'mwe-upwiz-help-desk-url' => 'Help Desk',
 	'mwe-upwiz-add-file-n' => 'Add another file',
 	'mwe-upwiz-add-file-0-free' => 'Select a media file to donate',
+        'mwe-upwiz-upload-flickr' => 'Upload images from flickr',
+	'mwe-upwiz-add-flickr' => 'Add images from flickr',
+	'mwe-upwiz-add-flickr-or' => 'Or' ,
 	'mwe-upwiz-transport-started' => 'Starting...',
 	'mwe-upwiz-uploading' => 'Uploading...',
 	'mwe-upwiz-transported' => 'Finished uploading...',
@@ -224,7 +227,7 @@ Please do not use wikitext or HTML here.',
 	'mwe-upwiz-file-too-large-text' => 'You can only upload files with a size of up to $1. You tried to upload a file that is $2.',
 	'mwe-upwiz-file-too-large' => 'File too large.',
 
-	
+
 	/* LICENSES & combinations of licenses */
 	/* may be a good idea to shift to WikimediaLicenseTexts? */
 	'mwe-upwiz-license-cc-by-sa-3.0' => 'Creative Commons Attribution ShareAlike 3.0 ([$2 legal code])',
@@ -9070,7 +9073,7 @@ $messages['he'] = array(
 	'mwe-upwiz-source-ownwork' => '{{PLURAL:$1|הקובץ הזה הוא|הקבצים האלה הם}} פרי עבודתי.',
 	'mwe-upwiz-source-ownwork-assert-any-license' => 'אני, $2, בעל זכויות היוצרים {{PLURAL:$1|ביצירה הזאת|ביצירות האלה}}, מעניק בזאת, באופן בלתי חוזר, לכל אחד את הזכות להשתמש {{PLURAL:$1|בה|בהן}}, וכן לשנות ולהפיץ {{PLURAL:$1|אותה|אותן}} לכל מטרה, ולכן אני מפרסם {{PLURAL:$1|אותה|אותן}} לפי התנאים הבאים:',
 	'mwe-upwiz-source-ownwork-assert' => 'אני, $2, בעל זכויות היוצרים {{PLURAL:$1|ביצירה הזאת|ביצירות האלה}}, מעניק בזאת, באופן בלתי חוזר, לכל אחד את הזכות להשתמש {{PLURAL:$1|בה|בהן}} לכל מטרה, בתנאי שהמשתמשים ייתנו לי קרדיט וישתפו את היצירות הנגזרות לפי אותם התנאים.',
-	'mwe-upwiz-source-ownwork-assert-cc-by-sa-3.0' => ' 
+	'mwe-upwiz-source-ownwork-assert-cc-by-sa-3.0' => '
 אני, $2, בעל זכויות היוצרים של {{PLURAL:$1|יצירה זו|יצירות אלה}}, מעניק בזאת באופן בלתי חוזר את השימוש ב{{PLURAL:$1|יצירה זו|יצירות אלה}} תחת תנאי רישיון Creative Commons Attribution ShareAlike 3.0 ([$3 legal code]).',
 	'mwe-upwiz-source-ownwork-cc-by-sa-3.0-explain' => '(ככל אחד יכול להשתמש, לחלוק או ליצור יצירה נגזרת מ{{PLURAL:$1|יצירה זו|יצירות אלה}}, כל עוד ניתן לי ייחוס כיוצר/ת היצירה והיצירה הנגזרת עצמה משוחררת תחת רישיון זה).',
 	'mwe-upwiz-source-ownwork-assert-cc-by-3.0' => 'אני, $2, בעל זכויות היוצרים של {{PLURAL:$1|יצירה זו|יצירות אלה}}, מעניק בזאת באופן בלתי חוזר את השימוש ב{{PLURAL:$1|יצירה זו|יצירות אלה}} תחת תנאי רישיון Creative Commons Attribution 3.0 license  ([$3 legal code]).',
@@ -12250,7 +12253,7 @@ $messages['ka'] = array(
 	'mwe-upwiz-ok' => 'კარგი',
 	'mwe-upwiz-cancel' => 'გაუქმება',
 	'mwe-upwiz-fileexists-replace' => 'ფაილი სახელწოდებით "$1" უკვე არსებობს. გთხოვთ, შეცვალეთ თქვენი ფაილის სახელწოდება რაიმე უნიკალურით.',
-	'mwe-upwiz-fileexists' => 'ფაილი ამ სახელით უკვე არსებობს. 
+	'mwe-upwiz-fileexists' => 'ფაილი ამ სახელით უკვე არსებობს.
 გთხოვთ, შეამოწმეთ <b><tt>$1</tt></b>, თუ დარწმუნებული არ ხართ, რომ გსურთ მისი შეცვლა.',
 	'mwe-upwiz-fileexists-replace-on-page' => 'ფაილი ამ სახელწოდებით უკვე არსებობს ($1). თუ თქვენ მისი ჩანაცვლება გსურთ, შედით [$2 არსებული ფაილის გვერდზე] და იქ სცადეთ ეს.',
 	'mwe-upwiz-fileexists-replace-no-link' => 'ამ სახელწოდების ფაილი უკვე არსებობს.',
@@ -12268,10 +12271,10 @@ $messages['ka'] = array(
 	'mwe-upwiz-files-complete' => 'თქვენი ფაილები აიტვირთა!',
 	'mwe-upwiz-tooltip-author' => 'სახელი პიროვნებისა, რომელმაც გადაიღო ფოტო, დახატა ნახატი, შექმნა გამოსახულება და ა. შ.',
 	'mwe-upwiz-tooltip-source' => 'საიდანაა ეს ეს ფოტო — ეს შეიძლება იყოს URL მისამართი, წიგნი ან გამოცემა.',
-	'mwe-upwiz-tooltip-sign' => 'თქვენ შეგიძლიათ მიუთითოთ თქვენი ვიკის ანგარიშის სახელი, ან თქვენი ნამდვილი სახელი. 
+	'mwe-upwiz-tooltip-sign' => 'თქვენ შეგიძლიათ მიუთითოთ თქვენი ვიკის ანგარიშის სახელი, ან თქვენი ნამდვილი სახელი.
 ორივე შემთხვევაში მისგან გაკეთდება ბმული თქვენი ვიკის მომხმარებლის გვერდზე.',
 	'mwe-upwiz-tooltip-title' => 'ფაილის უნიკალური აღმწერი სათაური. თქვენ შეგიძლიათ გამოიყენოთ მარტივი ტექსტი შორისებით. არ მიუთითოთ გაფართოება.',
-	'mwe-upwiz-tooltip-description' => 'მოკლედ აღწერეთ ამ ნამუშევრის შესახებ ყველაფერი მნიშვნელოვანი. 
+	'mwe-upwiz-tooltip-description' => 'მოკლედ აღწერეთ ამ ნამუშევრის შესახებ ყველაფერი მნიშვნელოვანი.
 ფოტოსათვის, მიუთითეთ რა არის გამოსახული, სად არის გადაღებული, რა ვითარებაში.',
 	'mwe-upwiz-tooltip-date' => 'ამ ნამუშევრის შექმნის, ან პირველად გამოქვეყნების თარიღი (ფორმატით წწწწ-თთ-დდ).',
 	'mwe-upwiz-tooltip-categories' => 'დაამატეთ თქვენ ფაილს [$1 კატეგორია] რათა გაადვილდეს მისი მოძიება.',
@@ -24184,4 +24187,3 @@ $1',
 	'mwe-upwiz-prefs-license-own' => '自己的作品 - $1',
 	'mwe-upwiz-prefs-license-thirdparty' => '他人的作品 - $1',
 );
-
