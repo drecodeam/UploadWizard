@@ -6,7 +6,6 @@ _this=this;
 _this.wizard= wizard;
 _this.url=url;
 _this.upload=upload;
-
 };
 
 mw.FlickrChecker.prototype = {
@@ -59,8 +58,14 @@ mw.FlickrChecker.prototype = {
 								licenseMessage = gM( 'mwe-upwiz-license-external-invalid', 'Flickr', licenseName );
 							} else {
 								licenseMessage = gM( 'mwe-upwiz-license-external', 'Flickr', licenseName );
-								var image_url='http://farm' + data.photo.farm + '.staticflickr.com/' + data.photo.server +'/'+ data.photo.id +'_' + data.photo.secret + '_b.jpg';
-								_this.upload = _this.wizard.newUpload(_this.file);
+								//XXX needs to be replaced by proper image size from Flickr API call
+                                                                var image_url='http://farm' + data.photo.farm + '.staticflickr.com/' + data.photo.server +'/'+ data.photo.id +'_' + data.photo.secret + '_b.jpg';
+								_this.file={
+                                                                    	name:data.photo.title._content + '.JPG',
+									url:image_url,
+                                                                        fromURL:true
+                                                                }
+                                                                _this.upload = _this.wizard.newUpload(_this.file);
 							}
 							// XXX Do something with data.
 						}

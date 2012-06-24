@@ -114,7 +114,7 @@ mw.UploadWizardUpload.prototype = {
 		// trigger through the div. Triggering through objects doesn't always work.
 		// TODO v.1.1 fix, don't need to use the div any more -- this now works in jquery 1.4.2
 		$j( this.ui.div ).trigger( 'removeUploadEvent' );
-		
+
 		if ( mw.UploadWizard.config.startImmediately === true ) {
 			// check all uploads, if they're complete, show the next button
 			this.wizard.showNext( 'file', 'stashed' );
@@ -386,16 +386,19 @@ mw.UploadWizardUpload.prototype = {
 					}
 
 					// make sure the file isn't too large
-					if ( this.transportWeight > actualMaxSize ) {
-						_this.showMaxSizeWarning( this.transportWeight, actualMaxSize );
-						return;
-					}
-
-					if ( this.imageinfo === undefined ) {
-						this.imageinfo = {};
-					}
-					this.filename = filename;
-
+                                        //xxx need a way to find the size of the Flickr image
+                                        if(_this.providedFile){
+                                            if(!_this.providedFile.fromURL){
+                                                if ( this.transportWeight > actualMaxSize ) {
+                                                    _this.showMaxSizeWarning( this.transportWeight, actualMaxSize );
+                                                    return;
+                                                }
+                                                if ( this.imageinfo === undefined ) {
+                                                    this.imageinfo = {};
+                                                }
+                                                this.filename = filename;
+                                            }
+                                        }
 					// For JPEGs, we use the JsJpegMeta library in core to extract metadata,
 					// including EXIF tags. This is done asynchronously once each file has been
 					// read. Only then is the file properly added to UploadWizard via fileNameOk().
@@ -762,11 +765,17 @@ mw.UploadWizardUpload.prototype = {
 			} else {
 				constructor = 'ApiUploadHandler';
 			}
-			this.uploadHandler = new mw[constructor]( this, this.api );
 			if ( mw.UploadWizard.config.debug ) {
 				mw.log( 'mw.UploadWizard::getUploadHandler> ' + constructor );
 			}
-		}
+                        if(this.providedFile){
+                            if(this.providedFile.fromURL){
+                                constructor = 'ApiUploadHandler';
+                            }
+                        }
+                        this.uploadHandler = new mw[constructor]( this, this.api );
+
+                }
 		return this.uploadHandler;
 	},
 

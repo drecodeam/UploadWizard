@@ -326,7 +326,7 @@ mw.UploadWizard.prototype = {
 	 */
 	flickrChecker: function() {
 		_this=this;
-		var flickr_input_url=$j('#flickr_input').val();
+		var flickr_input_url=$j('#flickr-input').val();
 		var Checker=new mw.FlickrChecker(_this,flickr_input_url);
 		Checker.getLicenses();
 		$j('body').bind('licenselistfilled',function(){Checker.checkFlickr();});
