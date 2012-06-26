@@ -28,10 +28,10 @@ var fileNsId = mw.config.get( 'wgNamespaceIds' ).file;
  * @param {int} reservedIndex - optional, what key in the uploads array to hold for this upload
  */
 mw.UploadWizardUpload = function( wizard, filesDiv, providedFile, reservedIndex ) {
-
+        console.log('uploadwizard called for' + providedFile);
 	this.index = mw.UploadWizardUpload.prototype.count;
 	mw.UploadWizardUpload.prototype.count++;
-
+        _this = this;
 	this.wizard = wizard;
 	this.api = wizard.api;
 	this.state = 'new';
@@ -44,7 +44,15 @@ mw.UploadWizardUpload = function( wizard, filesDiv, providedFile, reservedIndex 
 	this.filename = undefined;
 	this.providedFile = providedFile;
 	this.file = undefined;
+        this.fromURL = false;
 
+        //check to see if the File is being uplaoded from a 3rd party URL.
+        if( this.providedFile ){
+            if( this.providedFile.fromURL ){
+                this.fromURL = true;
+            }
+        }
+        
 	// reserved index for multi-file selection
 	this.reservedIndex = reservedIndex;
 
@@ -280,8 +288,10 @@ mw.UploadWizardUpload.prototype = {
 		_this.ui.setStatus( 'mwe-upwiz-getting-metadata' );
 		if ( result.upload ) {
 			_this.extractUploadInfo( result.upload );
-			_this.deedPreview.setup();
-			_this.details.populate();
+                        if(!_this.fromURL){
+                            _this.deedPreview.setup();
+                        }
+                        _this.details.populate();
 			_this.state = 'stashed';
 			_this.ui.showStashed();
 			$.publishReady( 'thumbnails.' + _this.index, 'api' );
@@ -386,20 +396,20 @@ mw.UploadWizardUpload.prototype = {
 					}
 
 					// make sure the file isn't too large
-                                        //xxx need a way to find the size of the Flickr image
-                                        if(_this.providedFile){
-                                            if(!_this.providedFile.fromURL){
-                                                if ( this.transportWeight > actualMaxSize ) {
-                                                    _this.showMaxSizeWarning( this.transportWeight, actualMaxSize );
-                                                    return;
-                                                }
-                                                if ( this.imageinfo === undefined ) {
-                                                    this.imageinfo = {};
-                                                }
-                                                this.filename = filename;
+                                        //XXX need a way to find the size of the Flickr image
+                                        if( !_this.fromURL ){
+                                            if ( this.transportWeight > actualMaxSize ) {
+                                                _this.showMaxSizeWarning( this.transportWeight, actualMaxSize );
+                                                return;
                                             }
                                         }
-					// For JPEGs, we use the JsJpegMeta library in core to extract metadata,
+                                            if ( this.imageinfo === undefined ) {
+                                                this.imageinfo = {};
+                                            }
+                                        
+                                        this.filename = filename;
+                                        
+                                        // For JPEGs, we use the JsJpegMeta library in core to extract metadata,
 					// including EXIF tags. This is done asynchronously once each file has been
 					// read. Only then is the file properly added to UploadWizard via fileNameOk().
 					//
@@ -456,7 +466,7 @@ mw.UploadWizardUpload.prototype = {
 					else {
 						var files = files.slice( 1 );
 					}
-
+                                        console.log(files);
 					if ( files.length > 0 ) {
 						$j.each( files, function( i, file ) {
 
@@ -768,10 +778,8 @@ mw.UploadWizardUpload.prototype = {
 			if ( mw.UploadWizard.config.debug ) {
 				mw.log( 'mw.UploadWizard::getUploadHandler> ' + constructor );
 			}
-                        if(this.providedFile){
-                            if(this.providedFile.fromURL){
-                                constructor = 'ApiUploadHandler';
-                            }
+                        if( this.fromURL ){
+                            constructor = 'ApiUploadHandler';
                         }
                         this.uploadHandler = new mw[constructor]( this, this.api );
 

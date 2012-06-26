@@ -18,6 +18,7 @@ mw.UploadWizard = function( config ) {
 	this.maxSimultaneousConnections = mw.UploadWizard.config[  'maxSimultaneousConnections'  ] || 2;
 
 	this.makePreviewsFlag = true;
+        this.showDeed = false;
 
 };
 
@@ -142,7 +143,7 @@ mw.UploadWizard.prototype = {
 			} );
 
 		$j( '#mwe-upwiz-add-file' ).button();
-                $j('#mwe-upwiz-upload-ctrl-flickr').button();
+                $j( '#mwe-upwiz-upload-ctrl-flickr' ).button();
 
 		if ( mw.UploadWizard.config.startImmediately !== true ) {
 			$j( '#mwe-upwiz-upload-ctrl' )
@@ -177,9 +178,21 @@ mw.UploadWizard.prototype = {
 
 		$j( '#mwe-upwiz-stepdiv-file .mwe-upwiz-buttons .mwe-upwiz-button-next' ).click( function() {
 			_this.removeErrorUploads( function() {
-				_this.prepareAndMoveToDeeds();
-			} );
+                                if( _this.showDeed ){
+                                   _this.prepareAndMoveToDeeds();
+                                }
+                                else{
+                                    $j.each( _this.uploads, function( i, upload ) {
+                                        upload.details.titleInput.checkTitle();
+                                        if( upload.fromURL ){
+                                            upload.details.useCustomDeedChooser();
+                                        }
+                                    } );
+                                    _this.moveToStep( 'details' );
+                                }
+                        } );
 		} );
+
 		$j( '#mwe-upwiz-stepdiv-file .mwe-upwiz-buttons .mwe-upwiz-button-retry' ).click( function() {
 			_this.hideFileEndButtons();
 			_this.startUploads();
@@ -198,10 +211,11 @@ mw.UploadWizard.prototype = {
 					var lastUploadIndex = _this.uploads.length - 1;
 
 					$j.each( _this.uploads, function( i, upload ) {
-
-						if ( _this.deedChooser.deed.name == 'custom' ) {
+                                                // uploads coming from Flickr do not have a deedChooser object till yet
+						if ( _this.deedChooser.deed.name == 'custom' || upload.fromURL ) {
 							upload.details.useCustomDeedChooser();
-						} else {
+						}
+                                                else {
 							upload.deedChooser = _this.deedChooser;
 						}
 
@@ -308,13 +322,13 @@ mw.UploadWizard.prototype = {
 	 */
 
 	flickrInterfaceInit: function() {
-		_this=this;
+		_this = this;
 		$j('#mwe-upwiz-add-file-container,#mwe-upwiz-upload-ctrl-flickr-container').hide();
 		//$j('#mwe-upwiz-upload-ctrl-container').show();
 		var flickr_input = '<input id="flickr-input"  type="text" value="Flickr Image URL"></input>';
 		var flickr_add= '<div id="mwe-upwiz-upload-add-flickr-container"><button id="mwe-upwiz-upload-add-flickr"></button></div>';
-		$j('#mwe-upwiz-files').prepend(flickr_input+flickr_add);
-		//this needs to be fixed
+		$j('#mwe-upwiz-files').prepend( flickr_input + flickr_add );
+		//XXX this needs to be fixed
 		$j( '#mwe-upwiz-upload-add-flickr' ).button({ label:gM( 'mwe-upwiz-upload-flickr')});
 		$j( '#mwe-upwiz-upload-add-flickr' ).click( function() {
 		_this.flickrChecker();
@@ -325,11 +339,12 @@ mw.UploadWizard.prototype = {
 	 * Responsible for fetching license of the provided media.
 	 */
 	flickrChecker: function() {
-		_this=this;
-		var flickr_input_url=$j('#flickr-input').val();
-		var Checker=new mw.FlickrChecker(_this,flickr_input_url);
+		var flickr_input_url = $j( '#flickr-input' ).val();
+		var Checker = new mw.FlickrChecker( _this, flickr_input_url );
 		Checker.getLicenses();
-		$j('body').bind('licenselistfilled',function(){Checker.checkFlickr();});
+		$j('body').bind( 'licenselistfilled' , function(){
+                    Checker.checkFlickr()
+                } );
 	},
 
 	/**
@@ -365,7 +380,8 @@ mw.UploadWizard.prototype = {
 	// do some last minute prep before advancing to the DEEDS page
 	prepareAndMoveToDeeds: function() {
 		var _this = this;
-		var deeds = _this.getLicensingDeeds( _this.uploads.length );
+
+                var deeds = _this.getLicensingDeeds( _this.uploads.length );
 
 		this.shouldShowIndividualDeed = function() {
 			if ( mw.UploadWizard.config.ownWorkOption == 'choice' ) {
@@ -397,7 +413,6 @@ mw.UploadWizard.prototype = {
 			deeds,
 			uploadsClone
 		 );
-
 
 		$j( '<div></div>' )
 			.insertBefore( _this.deedChooser.$selector.find( '.mwe-upwiz-deed-ownwork' ) )
@@ -523,12 +538,18 @@ mw.UploadWizard.prototype = {
 		} else {
 			_this.uploads.push( upload );
 		}
+                
+                //If upload is through a local file, then we need to show the Deeds step of the wizard
+                if( !upload.fromURL ){
+                    _this.showDeed = true;
+                }
 
 		_this.updateFileCounts();
-
-		upload.deedPreview = new mw.UploadWizardDeedPreview( upload );
-
-		// TODO v1.1 consider if we really have to set up details now
+                // Don't add files coming from Flickr ( or any other service ) in the Deeds preview section
+                if( !upload.fromURL ){
+                    upload.deedPreview = new mw.UploadWizardDeedPreview( upload );
+                }
+                // TODO v1.1 consider if we really have to set up details now
 		upload.details = new mw.UploadWizardDetails( upload, _this.api, $j( '#mwe-upwiz-macro-files' ) );
 
 		if ( mw.UploadWizard.config.startImmediately === true ) {
@@ -767,8 +788,10 @@ mw.UploadWizard.prototype = {
 				errorCount++;
 			} else if ( upload.state === desiredState ) {
 				// Add previews and details to the DOM
-				upload.deedPreview.attach();
-				upload.details.attach();
+				if(!upload.fromURL){
+                                    upload.deedPreview.attach();
+                                }
+                                upload.details.attach();
 				okCount++;
 			} else if ( upload.state === 'transporting' ) {
 				stillGoing += 1;
