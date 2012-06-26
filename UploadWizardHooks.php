@@ -74,6 +74,9 @@ class UploadWizardHooks {
 				'resources/mw.FirefoggHandler.js',
 				'resources/mw.FirefoggTransport.js',
 
+                                //flickr libraries
+                                'resources/mw.FlickrChecker.js',
+
 				//upload using FormData, large files in chunks
 				'resources/mw.FormDataTransport.js',
 				'resources/mw.ApiUploadFormDataHandler.js',
