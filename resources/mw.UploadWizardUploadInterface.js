@@ -19,17 +19,15 @@ mw.UploadWizardUploadInterface = function( upload, filesDiv, providedFile ) {
 	_this.isFilled = false;
 
 	_this.previewLoaded = false;
+                _this.$fileInputCtrl = $j( '<input size="1" class="mwe-upwiz-file-input" name="file" type="file"/>' );
+                var profile = $.client.profile();
+                if (mw.UploadWizard.config[ 'enableFormData' ] && mw.fileApi.isFormDataAvailable() ) {
+                    // Multiple uploads requires the FormData transport
+                    _this.$fileInputCtrl.attr( 'multiple', '1' );
+                }
+            _this.initFileInputCtrl();
 
-	_this.$fileInputCtrl = $j( '<input size="1" class="mwe-upwiz-file-input" name="file" type="file"/>' );
-	var profile = $.client.profile();
-	if (mw.UploadWizard.config[ 'enableFormData' ] && mw.fileApi.isFormDataAvailable() ) {
-		// Multiple uploads requires the FormData transport
-		_this.$fileInputCtrl.attr( 'multiple', '1' );
-	}
-
-	_this.initFileInputCtrl();
-
-	_this.$indicator = $j( '<div class="mwe-upwiz-file-indicator"></div>' );
+        _this.$indicator = $j( '<div class="mwe-upwiz-file-indicator"></div>' );
 
 	_this.visibleFilenameDiv = $j('<div class="mwe-upwiz-visible-file"></div>')
 		.append( _this.$indicator )
@@ -78,13 +76,17 @@ mw.UploadWizardUploadInterface = function( upload, filesDiv, providedFile ) {
 	_this.form = $j( '<form method="POST" encType="multipart/form-data" class="mwe-upwiz-form"></form>' )
 			.attr( { action: _this.upload.api.defaults.url } )
 			.append( _this.visibleFilenameDiv )
-			.append( _this.fileCtrlContainer
-				.append( _this.$fileInputCtrl )
-			)
+			.append( _this.fileCtrlContainer)
 			.append( _this.filenameCtrl )
 			.get( 0 );
-
-
+        if(_this.providedFile){
+            if(!_this.providedFile.fromURL){
+                $j(_this.fileCtrlContainer).append(_this.$fileInputCtrl);
+            }
+        }
+        else{
+                $j(_this.fileCtrlContainer).append(_this.$fileInputCtrl);
+        }
 	$j( _this.div ).append( _this.form );
 
 	// XXX evil hardcoded
@@ -216,8 +218,11 @@ mw.UploadWizardUploadInterface.prototype = {
 	 * Show that upload is transported
 	 */
 	showStashed: function() {
-		this.$removeCtrl.detach();
+		if ( mw.UploadWizard.config.startImmediately !== true ) {
+			this.$removeCtrl.detach();
+		}
 		this.$fileInputCtrl.detach();
+
 		if( this.$showThumbCtrl ) {
 			this.$showThumbCtrl.detach();
 		}
@@ -315,7 +320,9 @@ mw.UploadWizardUploadInterface.prototype = {
 			statusItems.push( this.upload.imageinfo.width + '\u00d7' + this.upload.imageinfo.height );
 		}
 		if ( this.upload.file ) {
+                    if(!this.upload.file.fromURL){
 			statusItems.push( mw.units.bytes( this.upload.file.size ) );
+                    }
 		}
 
 		this.clearStatus();

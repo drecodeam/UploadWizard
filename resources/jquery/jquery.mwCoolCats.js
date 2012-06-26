@@ -35,6 +35,7 @@
 		}
 
 		var title = new mw.Title( text, catNsId );
+		$input.data( 'title', title );
 
 		var cat = title.getMainText();
 		
@@ -95,7 +96,7 @@
 		if ( typeof selector === 'undefined' ) {
 			selector = '*'; // fetch _ALL_ the categories!
 		}
-		return $container.find( 'ul li.cat' )
+		return $container.find( 'ul li.cat, .categoryInput' )
 				.filter( selector )
 				.map( function() { return $j( this ).data( 'title' ); } );
 	}
@@ -215,7 +216,10 @@
 				if ( req && ( typeof req.abort !== 'unknown' ) && ( typeof req.abort !== 'undefined' ) && req.abort ) {
 					req.abort();
 				}
-			}
+			},
+			'result': { 'select': function ( $div, $text ) {
+				_processInput( _this );
+			} }
 		} );
 		_this.suggestions();
 

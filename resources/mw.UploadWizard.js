@@ -142,26 +142,38 @@ mw.UploadWizard.prototype = {
 			} );
 
 		$j( '#mwe-upwiz-add-file' ).button();
+                $j('#mwe-upwiz-upload-ctrl-flickr').button();
 
-		$j( '#mwe-upwiz-upload-ctrl' )
-			.button()
-			.click( function() {
-				// check if there is an upload at all (should never happen)
-				if ( _this.uploads.length === 0 ) {
-					$j( '<div></div>' )
-						.html( gM( 'mwe-upwiz-file-need-file' ) )
-						.dialog({
-							width: 500,
-							zIndex: 200000,
-							autoOpen: true,
-							modal: true
-						});
-					return;
-				}
+		if ( mw.UploadWizard.config.startImmediately !== true ) {
+			$j( '#mwe-upwiz-upload-ctrl' )
+				.button()
+				.click( function() {
+					// check if there is an upload at all (should never happen)
+					if ( _this.uploads.length === 0 ) {
+						$j( '<div></div>' )
+							.html( gM( 'mwe-upwiz-file-need-file' ) )
+							.dialog({
+								width: 500,
+								zIndex: 200000,
+								autoOpen: true,
+								modal: true
+							});
+						return;
+					}
 
-				_this.removeEmptyUploads();
-				_this.startUploads();
+					_this.removeEmptyUploads();
+					_this.startUploads();
 			} );
+		} else {
+			$j( '#mwe-upwiz-upload-ctrl' ).remove();
+		}
+
+                //Call Flickr Initiator function on click event
+		$j( '#mwe-upwiz-upload-ctrl-flickr' ).click( function() {
+				_this.flickrInterfaceInit();
+			} );
+
+
 
 		$j( '#mwe-upwiz-stepdiv-file .mwe-upwiz-buttons .mwe-upwiz-button-next' ).click( function() {
 			_this.removeErrorUploads( function() {
@@ -291,6 +303,34 @@ mw.UploadWizard.prototype = {
 
 	},
 
+	/**
+	 * Initiates the Interface to upload media from Flickr.
+	 */
+
+	flickrInterfaceInit: function() {
+		_this=this;
+		$j('#mwe-upwiz-add-file-container,#mwe-upwiz-upload-ctrl-flickr-container').hide();
+		//$j('#mwe-upwiz-upload-ctrl-container').show();
+		var flickr_input = '<input id="flickr-input"  type="text" value="Flickr Image URL"></input>';
+		var flickr_add= '<div id="mwe-upwiz-upload-add-flickr-container"><button id="mwe-upwiz-upload-add-flickr"></button></div>';
+		$j('#mwe-upwiz-files').prepend(flickr_input+flickr_add);
+		//this needs to be fixed
+		$j( '#mwe-upwiz-upload-add-flickr' ).button({ label:gM( 'mwe-upwiz-upload-flickr')});
+		$j( '#mwe-upwiz-upload-add-flickr' ).click( function() {
+		_this.flickrChecker();
+		} );
+	},
+
+	/**
+	 * Responsible for fetching license of the provided media.
+	 */
+	flickrChecker: function() {
+		_this=this;
+		var flickr_input_url=$j('#flickr-input').val();
+		var Checker=new mw.FlickrChecker(_this,flickr_input_url);
+		Checker.getLicenses();
+		$j('body').bind('licenselistfilled',function(){Checker.checkFlickr();});
+	},
 
 	/**
 	 * Get the own work and third party licensing deeds if they are needed.
@@ -490,6 +530,23 @@ mw.UploadWizard.prototype = {
 
 		// TODO v1.1 consider if we really have to set up details now
 		upload.details = new mw.UploadWizardDetails( upload, _this.api, $j( '#mwe-upwiz-macro-files' ) );
+
+		if ( mw.UploadWizard.config.startImmediately === true ) {
+			// Start uploads now, no reason to wait--leave the remove button alone
+			_this.makeTransitioner(
+				'new',
+				[ 'transporting', 'transported', 'metadata' ],
+				[ 'error', 'stashed' ],
+				function( upload ) {
+					upload.start();
+				},
+				function() {
+					$j().notify( gM( 'mwe-upwiz-files-complete' ) );
+					_this.showNext( 'file', 'stashed' );
+				}
+			);
+		}
+
 	},
 
 	/**
@@ -614,6 +671,17 @@ mw.UploadWizard.prototype = {
 
 	transitionerDelay: 200,  // milliseconds
 
+	startProgressBar: function () {
+		$j( '#mwe-upwiz-progress' ).show();
+		var progressBar = new mw.GroupProgressBar( '#mwe-upwiz-progress',
+						           gM( 'mwe-upwiz-uploading' ),
+						           this.uploads,
+							   [ 'stashed' ],
+						           [ 'error' ],
+							   'transportProgress',
+							   'transportWeight' );
+		progressBar.start();
+	},
 
 	/**
 	 * Kick off the upload processes.
@@ -693,6 +761,7 @@ mw.UploadWizard.prototype = {
 	showNext: function( step, desiredState, allOkCallback ) {
 		var errorCount = 0;
 		var okCount = 0;
+		var stillGoing = 0;
 		$j.each( this.uploads, function( i, upload ) {
 			if ( upload.state === 'error' ) {
 				errorCount++;
@@ -701,6 +770,8 @@ mw.UploadWizard.prototype = {
 				upload.deedPreview.attach();
 				upload.details.attach();
 				okCount++;
+			} else if ( upload.state === 'transporting' ) {
+				stillGoing += 1;
 			} else {
 				mw.log( "mw.UploadWizardUpload::showFileNext> upload " + i + " not in appropriate state for filenext: " + upload.state );
 			}
@@ -720,6 +791,8 @@ mw.UploadWizard.prototype = {
 			selector = '.mwe-upwiz-file-next-all-ok';
 		} else if ( errorCount === this.uploads.length ) {
 			selector = '.mwe-upwiz-file-next-all-failed';
+		} else if ( stillGoing !== 0 ) {
+			return;
 		} else {
 			selector = '.mwe-upwiz-file-next-some-failed';
 		}
@@ -987,7 +1060,7 @@ mw.UploadWizard.prototype = {
 		};
 		var prefRequest = {
 			'action': 'options',
-			'change': 'upwiz_skiptutorial=1',
+			'change': 'upwiz_skiptutorial=1'
 		};
 
 		_this.api.post( tokenRequest,
