@@ -1,7 +1,7 @@
 ( function( mw, $ ) {
 
 
-mw.FlickrChecker= function( wizard, url, $selector, upload){
+mw.FlickrChecker= function( wizard, url, $selector ,upload ){
 this.wizard = wizard;
 this.url = url;
 this.upload = upload;
@@ -9,6 +9,8 @@ this.upload = upload;
 
 mw.FlickrChecker.prototype = {
 	licenseList: new Array(),
+        
+        //XXX should come from settings
 	apiUrl: 'http://api.flickr.com/services/rest/?',
 	apiKey: 'e9d8174a79c782745289969a45d350e8',
 
@@ -39,7 +41,7 @@ mw.FlickrChecker.prototype = {
  	 * @param upload - the upload object to set the deed for
 	 */
 	checkFlickr: function() {
-		var photoIdMatches = this.url.match( /flickr.com\/photos\/[^\/]+\/([0-9]+)/ );
+		var photoIdMatches = this.url.match(/flickr.com\/photos\/[^\/]+\/([0-9]+)/);
 		if ( photoIdMatches && photoIdMatches[1] > 0 ) {
 			var photoId = photoIdMatches[1];
 			$.getJSON( this.apiUrl, { 'nojsoncallback': 1, 'method': 'flickr.photos.getInfo', 'api_key': this.apiKey, 'photo_id': photoId, 'format': 'json' },
@@ -56,14 +58,18 @@ mw.FlickrChecker.prototype = {
 								licenseMessage = gM( 'mwe-upwiz-license-external-invalid', 'Flickr', licenseName );
 							} else {
 								licenseMessage = gM( 'mwe-upwiz-license-external', 'Flickr', licenseName );
-								//XXX needs to be replaced by proper image size from Flickr API call
+								
+                                                                //XXX needs to be replaced by proper image size from Flickr API call
                                                                 var image_url='http://farm' + data.photo.farm + '.staticflickr.com/' + data.photo.server +'/'+ data.photo.id +'_' + data.photo.secret + '_b.jpg';
 								this.file={
                                                                     	name : data.photo.title._content + '.JPG',
 									url : image_url,
-                                                                        fromURL : true
+                                                                        fromURL : true,
+                                                                        licenseValue : licenseValue,
+                                                                        licenseMessage : licenseMessage,
+                                                                        license : true
                                                                 }
-                                                                this.upload = this.wizard.newUpload( _this.file );
+                                                                this.upload = this.wizard.newUpload( this.file );
 							}
 							// XXX Do something with data.
 						}

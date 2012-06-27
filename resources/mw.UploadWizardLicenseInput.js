@@ -22,7 +22,6 @@ var catNsId 		= mw.config.get( 'wgNamespaceIds' ).category,
 mw.UploadWizardLicenseInput = function( selector, values, config, count, api ) {
 	var _this = this;
 	_this.count = count;
-
 	_this.api = api;
 
 	if ( config.type === undefined
