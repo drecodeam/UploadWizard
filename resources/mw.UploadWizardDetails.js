@@ -594,33 +594,14 @@ mw.UploadWizardDetails.prototype = {
 		var _this = this;
 		_this.copyrightInfoFieldset.show();
 		_this.upload.wizardDeedChooser = _this.upload.deedChooser;
-                // Defining own deedChooser for uploads coming from external service
-                if( _this.upload.fromURL && _this.upload.providedFile.license ){
-                        _this.upload.deedChooser = {
-                            valid : function(){return true;}
-                        }
-                    
-                        // Need to add tipsy tips here 
-                        $j(_this.deedDiv).append( _this.upload.providedFile.licenseMessage );
-    
-                        _this.upload.deedChooser.deed = {
-                                valid : function(){return true;},
-                                getSourceWikiText : function(){},
-                                getAuthorWikiText : function(){},
-                                getLicenseWikiText : function(){
-                                return _this.upload.providedFile.licenseValue
-                            }
-                        }
-                }
-                else{
-                        _this.upload.deedChooser = new mw.UploadWizardDeedChooser(
-                        	_this.deedDiv,
-                        	_this.upload.wizard.getLicensingDeeds(),
-                        	[ _this.upload ]
-                        );
-                    _this.upload.deedChooser.onLayoutReady();
 
-                }
+		_this.upload.deedChooser = new mw.UploadWizardDeedChooser(
+			_this.deedDiv,
+			_this.upload.wizard.getLicensingDeeds(),
+			[ _this.upload ]
+		);
+
+		_this.upload.deedChooser.onLayoutReady();
 	},
 
 	/**

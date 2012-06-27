@@ -50,11 +50,11 @@ mw.ApiUploadHandler.prototype = {
 
 		// we use JSON in HTML because according to mdale, some browsers cannot handle just JSON
 		_this.addFormInputIfMissing( 'format', 'jsonfm' );
-
-                if(_this.upload.fromURL){
-                    _this.addFormInputIfMissing( 'url',_this.upload.providedFile.url);
+                if( _this.upload.providedFile ){
+                    if( _this.upload.providedFile.fromURL ){
+                        _this.addFormInputIfMissing( 'url', _this.upload.providedFile.url );
+                    }
                 }
-
 	},
 
 	/**

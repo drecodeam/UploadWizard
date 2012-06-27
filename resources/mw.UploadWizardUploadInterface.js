@@ -19,13 +19,13 @@ mw.UploadWizardUploadInterface = function( upload, filesDiv, providedFile ) {
 	_this.isFilled = false;
 
 	_this.previewLoaded = false;
-                _this.$fileInputCtrl = $j( '<input size="1" class="mwe-upwiz-file-input" name="file" type="file"/>' );
-                var profile = $.client.profile();
-                if (mw.UploadWizard.config[ 'enableFormData' ] && mw.fileApi.isFormDataAvailable() ) {
-                    // Multiple uploads requires the FormData transport
-                    _this.$fileInputCtrl.attr( 'multiple', '1' );
-                }
-            _this.initFileInputCtrl();
+        _this.$fileInputCtrl = $j( '<input size="1" class="mwe-upwiz-file-input" name="file" type="file"/>' );
+        var profile = $.client.profile();
+        if (mw.UploadWizard.config[ 'enableFormData' ] && mw.fileApi.isFormDataAvailable() ) {
+                // Multiple uploads requires the FormData transport
+                 _this.$fileInputCtrl.attr( 'multiple', '1' );
+	}
+        _this.initFileInputCtrl();
 
         _this.$indicator = $j( '<div class="mwe-upwiz-file-indicator"></div>' );
 
@@ -79,11 +79,14 @@ mw.UploadWizardUploadInterface = function( upload, filesDiv, providedFile ) {
 			.append( _this.fileCtrlContainer)
 			.append( _this.filenameCtrl )
 			.get( 0 );
-
-        if(!_this.upload.fromURL){
-            $j(_this.fileCtrlContainer).append(_this.$fileInputCtrl);
+        if( _this.providedFile ){
+            if( !_this.providedFile.fromURL ){
+                $j( _this.fileCtrlContainer ).append( _this.$fileInputCtrl );
+            }
         }
-
+        else{
+                $j( _this.fileCtrlContainer ).append( _this.$fileInputCtrl );
+        }
 	$j( _this.div ).append( _this.form );
 
 	// XXX evil hardcoded
@@ -316,9 +319,11 @@ mw.UploadWizardUploadInterface.prototype = {
 		if ( this.upload.imageinfo && this.upload.imageinfo.width && this.upload.imageinfo.height ) {
 			statusItems.push( this.upload.imageinfo.width + '\u00d7' + this.upload.imageinfo.height );
 		}
-                if( !this.upload.fromURL ){
-		    statusItems.push( mw.units.bytes( this.upload.file.size ) );
-                }
+		if ( this.upload.file ) {
+                    if( !this.upload.fromURL ){
+			statusItems.push( mw.units.bytes( this.upload.file.size ) );
+                    }
+		}
 
 		this.clearStatus();
 		this.setStatusString( statusItems.join( ' \u00b7 ' ) );
