@@ -62,7 +62,7 @@ mw.FlickrChecker.prototype = {
 								
                                                                 //XXX needs to be replaced by proper image size from Flickr API call
                                                                 var image_url='http://farm' + data.photo.farm + '.staticflickr.com/' + data.photo.server +'/'+ data.photo.id +'_' + data.photo.secret + '_b.jpg';
-								this.file={
+								_this.file={
                                                                     	name : data.photo.title._content + '.JPG',
 									url : image_url,
                                                                         fromURL : true,
@@ -85,7 +85,7 @@ mw.FlickrChecker.prototype = {
 	getLicenses: function() {
 		$.getJSON( this.apiUrl, { 'nojsoncallback': 1, 'method': 'flickr.photos.licenses.getInfo', 'api_key': this.apiKey, 'format': 'json' },
 			function( data ) {
-				if ( typeof data.licenses != 'undefined' ) {
+                                if ( typeof data.licenses != 'undefined' ) {
 					$.each( data.licenses.license, function(index, value) {
 						mw.FlickrChecker.prototype.licenseList[value.id] = value.name;
 					} );
