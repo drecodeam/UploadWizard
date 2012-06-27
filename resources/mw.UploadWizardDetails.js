@@ -596,6 +596,7 @@ mw.UploadWizardDetails.prototype = {
 		_this.upload.wizardDeedChooser = _this.upload.deedChooser;
                 // Defining own deedChooser for uploads coming from external service
                 if( _this.upload.fromURL && _this.upload.providedFile.license ){
+                        // XXX can be made a seperate class as mw.UploadFromUrlDeedChooser
                         _this.upload.deedChooser = {
                             valid : function(){return true;}
                         }

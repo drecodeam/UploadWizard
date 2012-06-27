@@ -158,7 +158,6 @@ mw.UploadWizardDeedOwnWork = function( uploadCount, api ) {
 				$crossfader.append( $customDiv );
 			}
 
-                        console.log('need to understand this');
 			var $formFields = $j( '<div class="mwe-upwiz-deed-form-internal" />' )
 				.append( $crossfader );
 
@@ -370,7 +369,6 @@ mw.UploadWizardDeedChooser = function( selector, deeds, uploads, api ) {
 	mw.UploadWizardDeedChooser.prototype.widgetCount++;
 	_this.name = 'deedChooser' + mw.UploadWizardDeedChooser.prototype.widgetCount.toString();
         _this.onLayoutReady = function(){};
-
 	$j.each( deeds, function (i, deed) {
 		var id = _this.name + '-' + deed.name;
 		var $deedInterface = $j(
@@ -404,7 +402,6 @@ mw.UploadWizardDeedChooser = function( selector, deeds, uploads, api ) {
                         console.log(mw.UploadWizard.config.defaultLicenseType + deed.name);
 			if ( mw.UploadWizard.config.defaultLicenseType === deed.name ) {
 				_this.onLayoutReady = selectDeedFunction;
-
                         }
 			$deedInterface.find( 'span.mwe-upwiz-deed-header input' ).click( function() {
 				if ( $j( this ).is( ':checked' )  ) {
@@ -473,7 +470,6 @@ mw.UploadWizardDeedChooser.prototype = {
 	choose: function( deed ) {
 		var _this = this;
 		_this.deed = deed;
-                console.log(deed);
 		if ( deed !== mw.UploadWizardNullDeed ) {
 			$j( _this ).trigger( 'chooseDeed' );
 		}

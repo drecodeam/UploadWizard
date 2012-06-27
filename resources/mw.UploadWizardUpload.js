@@ -28,7 +28,6 @@ var fileNsId = mw.config.get( 'wgNamespaceIds' ).file;
  * @param {int} reservedIndex - optional, what key in the uploads array to hold for this upload
  */
 mw.UploadWizardUpload = function( wizard, filesDiv, providedFile, reservedIndex ) {
-        console.log('uploadwizard called for' + providedFile);
 	this.index = mw.UploadWizardUpload.prototype.count;
 	mw.UploadWizardUpload.prototype.count++;
         _this = this;
@@ -288,7 +287,7 @@ mw.UploadWizardUpload.prototype = {
 		_this.ui.setStatus( 'mwe-upwiz-getting-metadata' );
 		if ( result.upload ) {
 			_this.extractUploadInfo( result.upload );
-                        if(!_this.fromURL){
+                        if( !_this.fromURL ){
                             _this.deedPreview.setup();
                         }
                         _this.details.populate();
@@ -403,9 +402,9 @@ mw.UploadWizardUpload.prototype = {
                                                 return;
                                             }
                                         }
-                                            if ( this.imageinfo === undefined ) {
+                                        if ( this.imageinfo === undefined ) {
                                                 this.imageinfo = {};
-                                            }
+                                        }
                                         
                                         this.filename = filename;
                                         
@@ -466,7 +465,6 @@ mw.UploadWizardUpload.prototype = {
 					else {
 						var files = files.slice( 1 );
 					}
-                                        console.log(files);
 					if ( files.length > 0 ) {
 						$j.each( files, function( i, file ) {
 

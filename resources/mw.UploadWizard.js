@@ -326,9 +326,9 @@ mw.UploadWizard.prototype = {
 		$j('#mwe-upwiz-add-file-container,#mwe-upwiz-upload-ctrl-flickr-container').hide();
 		//$j('#mwe-upwiz-upload-ctrl-container').show();
 		var flickr_input = '<input id="flickr-input"  type="text" value="Flickr Image URL"></input>';
-		var flickr_add= '<div id="mwe-upwiz-upload-add-flickr-container"><button id="mwe-upwiz-upload-add-flickr"></button></div>';
+		var flickr_add = '<div id="mwe-upwiz-upload-add-flickr-container"><button id="mwe-upwiz-upload-add-flickr"></button></div>';
 		$j('#mwe-upwiz-files').prepend( flickr_input + flickr_add );
-		//XXX this needs to be fixed
+		//XXX this needs to be added in the resource loader
 		$j( '#mwe-upwiz-upload-add-flickr' ).button({ label:gM( 'mwe-upwiz-upload-flickr')});
 		$j( '#mwe-upwiz-upload-add-flickr' ).click( function() {
 		_this.flickrChecker();
@@ -342,7 +342,7 @@ mw.UploadWizard.prototype = {
 		var flickr_input_url = $j( '#flickr-input' ).val();
 		var Checker = new mw.FlickrChecker( _this, flickr_input_url );
 		Checker.getLicenses();
-		$j('body').bind( 'licenselistfilled' , function(){
+		$j( 'body' ).bind( 'licenselistfilled' , function(){
                     Checker.checkFlickr()
                 } );
 	},
@@ -533,6 +533,8 @@ mw.UploadWizard.prototype = {
 		// may be filled in random order, because filling them depends on
 		// completion of metadata extraction. We use the reservedIndex to ensure
 		// they're added in the correct order when they're filled.
+                // TODO v1.1 consider if we really have to set up details now
+
 		if ( upload.reservedIndex !== undefined ) {
 			_this.uploads[upload.reservedIndex] = upload;
 		} else {
@@ -549,7 +551,6 @@ mw.UploadWizard.prototype = {
                 if( !upload.fromURL ){
                     upload.deedPreview = new mw.UploadWizardDeedPreview( upload );
                 }
-                // TODO v1.1 consider if we really have to set up details now
 		upload.details = new mw.UploadWizardDetails( upload, _this.api, $j( '#mwe-upwiz-macro-files' ) );
 
 		if ( mw.UploadWizard.config.startImmediately === true ) {
@@ -788,7 +789,7 @@ mw.UploadWizard.prototype = {
 				errorCount++;
 			} else if ( upload.state === desiredState ) {
 				// Add previews and details to the DOM
-				if(!upload.fromURL){
+				if( !upload.fromURL ){
                                     upload.deedPreview.attach();
                                 }
                                 upload.details.attach();

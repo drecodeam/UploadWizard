@@ -2,6 +2,7 @@
 
 
 mw.FlickrChecker= function( wizard, url, $selector ,upload ){
+_this = this;
 this.wizard = wizard;
 this.url = url;
 this.upload = upload;
@@ -41,7 +42,7 @@ mw.FlickrChecker.prototype = {
  	 * @param upload - the upload object to set the deed for
 	 */
 	checkFlickr: function() {
-		var photoIdMatches = this.url.match(/flickr.com\/photos\/[^\/]+\/([0-9]+)/);
+		var photoIdMatches = _this.url.match(/flickr.com\/photos\/[^\/]+\/([0-9]+)/);
 		if ( photoIdMatches && photoIdMatches[1] > 0 ) {
 			var photoId = photoIdMatches[1];
 			$.getJSON( this.apiUrl, { 'nojsoncallback': 1, 'method': 'flickr.photos.getInfo', 'api_key': this.apiKey, 'photo_id': photoId, 'format': 'json' },
@@ -69,10 +70,9 @@ mw.FlickrChecker.prototype = {
                                                                         licenseMessage : licenseMessage,
                                                                         license : true
                                                                 }
-                                                                this.upload = this.wizard.newUpload( this.file );
+                                                                _this.upload = _this.wizard.newUpload( _this.file );
 							}
-							// XXX Do something with data.
-						}
+                                                }
 					}
 				}
 			);
