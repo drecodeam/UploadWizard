@@ -399,10 +399,9 @@ mw.UploadWizardDeedChooser = function( selector, deeds, uploads, api ) {
 			_this.onLayoutReady = selectDeedFunction;
 		}
 		else {
-                        console.log(mw.UploadWizard.config.defaultLicenseType + deed.name);
 			if ( mw.UploadWizard.config.defaultLicenseType === deed.name ) {
 				_this.onLayoutReady = selectDeedFunction;
-                        }
+			}
 			$deedInterface.find( 'span.mwe-upwiz-deed-header input' ).click( function() {
 				if ( $j( this ).is( ':checked' )  ) {
 					_this.choose( deed );
