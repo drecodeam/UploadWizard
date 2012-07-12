@@ -272,7 +272,7 @@ mw.UploadWizardUploadInterface.prototype = {
 	getFiles: function() {
 		var files = [];
 		if ( mw.fileApi.isAvailable() ) {
-			if( this.providedFile && ! this.$fileInputCtrl.get(0).value ) {  // default to the fileinput if it's defined.
+			if( this.providedFile && !this.$fileInputCtrl.get(0).value ) {  // default to the fileinput if it's defined.
 				files[0] = this.providedFile;
 			} else {
 				$j.each( this.$fileInputCtrl.get(0).files, function( i, file ) {
@@ -316,9 +316,10 @@ mw.UploadWizardUploadInterface.prototype = {
 		if ( this.upload.imageinfo && this.upload.imageinfo.width && this.upload.imageinfo.height ) {
 			statusItems.push( this.upload.imageinfo.width + '\u00d7' + this.upload.imageinfo.height );
 		}
-                if( !this.upload.fromURL ){
-		    statusItems.push( mw.units.bytes( this.upload.file.size ) );
-                }
+		
+		if( !this.upload.fromURL ){
+			statusItems.push( mw.units.bytes( this.upload.file.size ) );
+		}
 
 		this.clearStatus();
 		this.setStatusString( statusItems.join( ' \u00b7 ' ) );
@@ -478,7 +479,6 @@ mw.UploadWizardUploadInterface.prototype = {
 				.height( $covered.outerHeight() );
 
 			_this.fileCtrlContainer.css( { 'z-index': 1 } );
-
 			// shift the file input over with negative margins,
 			// internal to the overflow-containing div, so the div shows all button
 			// and none of the textfield-like input
