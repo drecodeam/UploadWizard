@@ -20,11 +20,6 @@ $specialPageAliases['ar'] = array(
 	'UploadCampaign' => array( 'حملة_الرفع' ),
 );
 
-/** Assamese (অসমীয়া) */
-$specialPageAliases['as'] = array(
-	'UploadWizard' => array( 'আপল’ড_প্ৰক্ৰিয়া' ),
-);
-
 /** Danish (dansk) */
 $specialPageAliases['da'] = array(
 	'UploadWizard' => array( 'Vejviser_til_oplægning_af_filer' ),
@@ -58,7 +53,7 @@ $specialPageAliases['fa'] = array(
 	'UploadWizard' => array( 'جادوگر_بارگذاری' ),
 );
 
-/** Galician (galego) */
+/** Galician (Galego) */
 $specialPageAliases['gl'] = array(
 	'UploadWizard' => array( 'Asistente_de_cargas' ),
 );
@@ -100,7 +95,7 @@ $specialPageAliases['ja'] = array(
 /** Korean (한국어) */
 $specialPageAliases['ko'] = array(
 	'UploadWizard' => array( '올리기마법사' ),
-	'UploadCampaigns' => array( '올리기캠페인목록' ),
+	'UploadCampaigns' => array( '올리기캠페인들' ),
 	'UploadCampaign' => array( '올리기캠페인' ),
 );
 
@@ -164,8 +159,8 @@ $specialPageAliases['tr'] = array(
 /** Ukrainian (українська) */
 $specialPageAliases['uk'] = array(
 	'UploadWizard' => array( 'Майстер_завантаження' ),
-	'UploadCampaigns' => array( 'Масові_завантаження' ),
-	'UploadCampaign' => array( 'Масове_завантаження' ),
+	'UploadCampaigns' => array( 'Масове_завантаження' ),
+	'UploadCampaign' => array( 'Масові_завантаження' ),
 );
 
 /** Vietnamese (Tiếng Việt) */

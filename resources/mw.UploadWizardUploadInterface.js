@@ -468,7 +468,6 @@ mw.UploadWizardUploadInterface.prototype = {
 		var _this = this;
 		var update = function() {
 			var $covered = $j( selector );
-
 			_this.fileCtrlContainer
 				.css( $covered.position() )
 				.css( 'marginTop', $covered.css( 'marginTop' ) )

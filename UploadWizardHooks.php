@@ -20,6 +20,7 @@ class UploadWizardHooks {
 				'jquery.ui.datepicker',
 				'jquery.ui.progressbar',
 				'jquery.spinner',
+				'jquery.ui.selectable',
 				'jquery.suggestions',
 				'jquery.tipsy',
 				'jquery.ui.widget',
@@ -74,8 +75,8 @@ class UploadWizardHooks {
 				'resources/mw.FirefoggHandler.js',
 				'resources/mw.FirefoggTransport.js',
 
-                                //flickr libraries
-                                'resources/mw.FlickrChecker.js',
+				//flickr libraries
+				'resources/mw.FlickrChecker.js',
 
 				//upload using FormData, large files in chunks
 				'resources/mw.FormDataTransport.js',
@@ -161,6 +162,9 @@ class UploadWizardHooks {
 				'mwe-upwiz-help-desk',
 				'mwe-upwiz-add-file-n',
 				'mwe-upwiz-add-file-0-free',
+				'mwe-upwiz-flickr-input-placeholder',
+				'mwe-upwiz-add-flickr',
+				'mwe-upwiz-select-flickr',
 				'mwe-upwiz-browse',
 				'mwe-upwiz-transport-started',
 				'mwe-upwiz-uploading',

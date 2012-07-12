@@ -18,6 +18,9 @@ return array(
 	// The default api url is for the current wiki ( can override at run time )
 	'apiUrl' => $wgServer . $wgScriptPath . '/api.php',
 
+	//Flickr details
+	'flickrapiUrl' => 'http://api.flickr.com/services/rest/?',
+	'flickrapiKey' => 'e9d8174a79c782745289969a45d350e8',
 	// Categories to automatically (and silently) add all uploaded images into.
 	'autoCategories' => array(),
 

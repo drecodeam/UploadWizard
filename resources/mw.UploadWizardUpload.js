@@ -30,7 +30,6 @@ var fileNsId = mw.config.get( 'wgNamespaceIds' ).file;
 mw.UploadWizardUpload = function( wizard, filesDiv, providedFile, reservedIndex ) {
 	this.index = mw.UploadWizardUpload.prototype.count;
 	mw.UploadWizardUpload.prototype.count++;
-        _this = this;
 	this.wizard = wizard;
 	this.api = wizard.api;
 	this.state = 'new';
@@ -43,15 +42,13 @@ mw.UploadWizardUpload = function( wizard, filesDiv, providedFile, reservedIndex 
 	this.filename = undefined;
 	this.providedFile = providedFile;
 	this.file = undefined;
-        this.fromURL = false;
-
-        //check to see if the File is being uplaoded from a 3rd party URL.
-        if( this.providedFile ){
-            if( this.providedFile.fromURL ){
-                this.fromURL = true;
-            }
-        }
-        
+	this.fromURL = false;
+	//check to see if the File is being uplaoded from a 3rd party URL.
+	if( this.providedFile ){
+		if( this.providedFile.fromURL ){
+			this.fromURL = true;
+		}
+	}
 	// reserved index for multi-file selection
 	this.reservedIndex = reservedIndex;
 
@@ -314,6 +311,7 @@ mw.UploadWizardUpload.prototype = {
 
 		var _this = this;
 
+
 		function finishCallback () {
 			if ( _this && _this.ui ) {
 				fileNameOk();
@@ -376,9 +374,7 @@ mw.UploadWizardUpload.prototype = {
 					// So, when multiple files are provided (via select multiple), add the first file to this UploadWizardUpload
 					// and create new UploadWizardUpload objects and corresponding interfaces for the rest.
 
-					this.file = files[0];
-
-					this.transportWeight = this.file.size;
+						this.file = files[0];
 
 					// If chunked uploading is enabled, we can transfer any file that MediaWiki
 					// will accept. Otherwise we're bound by PHP's limits.
@@ -395,20 +391,20 @@ mw.UploadWizardUpload.prototype = {
 					}
 
 					// make sure the file isn't too large
-                                        //XXX need a way to find the size of the Flickr image
-                                        if( !_this.fromURL ){
-                                            if ( this.transportWeight > actualMaxSize ) {
-                                                _this.showMaxSizeWarning( this.transportWeight, actualMaxSize );
-                                                return;
-                                            }
-                                        }
-                                        if ( this.imageinfo === undefined ) {
-                                                this.imageinfo = {};
-                                        }
+					//XXX need a way to find the size of the Flickr image
+					if( !_this.fromURL ){
+						this.transportWeight = this.file.size;
+						if ( this.transportWeight > actualMaxSize ) {
+							_this.showMaxSizeWarning( this.transportWeight, actualMaxSize );
+							return;
+						}
+					}
+					if ( this.imageinfo === undefined ) {
+						this.imageinfo = {};
+					}                    
+					this.filename = filename;
                                         
-                                        this.filename = filename;
-                                        
-                                        // For JPEGs, we use the JsJpegMeta library in core to extract metadata,
+                    // For JPEGs, we use the JsJpegMeta library in core to extract metadata,
 					// including EXIF tags. This is done asynchronously once each file has been
 					// read. Only then is the file properly added to UploadWizard via fileNameOk().
 					//
@@ -467,7 +463,6 @@ mw.UploadWizardUpload.prototype = {
 					}
 					if ( files.length > 0 ) {
 						$j.each( files, function( i, file ) {
-
 							// NOTE: By running newUpload we will end up calling checkfile() again.
 							var upload = _this.wizard.newUpload( file, _this.reservedIndex + i + 1 );
 						} );

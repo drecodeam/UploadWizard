@@ -207,15 +207,14 @@ form.mwe-upwiz-form {
 /* Flickr Interface CSS*/
 
 #mwe-upwiz-upload-ctrl-flickr-container {
-	display: block;
-	position: relative;
 	text-align: center;
 }
 
 #mwe-upwiz-upload-ctrl-flickr {
-	display: block;
+	display: inline-block;
 	position: relative;
-	margin-left: 250px !important;
+	/*margin-left: 250px !important;*/
+	text-align: center;
 }
 
 #mwe-upwiz-upload-ctr-divide {
@@ -224,9 +223,8 @@ form.mwe-upwiz-form {
 }
 
 #flickr-input {
-	display: block;
+	display: inline-block;
 	position: relative;
-	margin-left: 250px;
 	font-size: 1.2em;
 	width: 250px;
 	border: 1px solid #AD9C9C;
@@ -234,15 +232,49 @@ form.mwe-upwiz-form {
 	-moz-border-radius: 6px;
 	border-radius: 6px;
 	padding: 5px;
-	color:#CCCCCC;
 }
 
 #mwe-upwiz-upload-add-flickr {
-	display: block;
+	display: inline-block;
 	position: relative;
-	margin-left: 300px !important;
 }
 
+#mwe-upwiz-upload-add-flickr-container {
+	text-align: center;
+}
+#mwe-upwiz-flickrSelectlistContainer{
+	display: none;
+	text-align: center;
+}
+#mwe-upwiz-flickrSelectlist { 
+	list-style: none;
+	clear: both;
+	overflow: hidden;
+}
+
+#mwe-upwiz-flickrSelectlist .ui-selecting { 
+	background: #FECA40;
+}
+
+#mwe-upwiz-flickrSelectlist .ui-selected { 
+	background: green; 
+}
+
+#mwe-upwiz-flickrSelectlist li { 
+	margin: 0.5em; 
+	padding: 1px; 
+	float: left; 
+	display: inline-block;
+	width: 100px;
+	height: 100px;
+	background: none;
+}
+
+#mwe-upwiz-flickrSelectlist li img{
+	margin: 12.25px;
+	display: block;
+	position: relative;
+}
 .mwe-upwiz-visible-file {
 	width: 100%; /* of containing mwe-upwiz-file */
 	overflow: hidden;
@@ -779,3 +811,5 @@ input.mwe-date {
 	color:gray;
 	padding-left:0.5em;
 }
+
+

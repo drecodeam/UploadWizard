@@ -215,10 +215,9 @@ mw.UploadWizardDetails = function( upload, api, containerDiv ) {
 
 
 	_this.copyMetadataCtrlDiv = undefined;
-
 	// If this is the first upload in a batch, we offer the user the option
 	// to apply the metadata they enter to all other uploads in the same batch.
-	if( mw.UploadWizard.config.copyMetadataFeature === true && _this.upload.index === 0 ) {
+	if( mw.UploadWizard.config.copyMetadataFeature === true && _this.upload.index === 0 && !_this.upload.fromURL ) {
 
 		_this.copyMetadataCtrlDiv = $j( '<div class="mwe-upwiz-details-copy-metadata"></div>' );
 		var copyMetadataDiv = $j( '<div class="mwe-upwiz-metadata-copier"></div>' );
@@ -252,7 +251,6 @@ mw.UploadWizardDetails = function( upload, api, containerDiv ) {
 			copyMetadataDiv,
 			'mwe-upwiz-copy-metadata'
 		);
-
 		// Default state is collapsed, will be shown if there's more than one upload.
 		// See showNext in mw.UploadWizard
 		_this.copyMetadataCtrlDiv.hide();
@@ -594,34 +592,36 @@ mw.UploadWizardDetails.prototype = {
 		var _this = this;
 		_this.copyrightInfoFieldset.show();
 		_this.upload.wizardDeedChooser = _this.upload.deedChooser;
-                // Defining own deedChooser for uploads coming from external service
-                if( _this.upload.fromURL && _this.upload.providedFile.license ){
-                        // XXX can be made a seperate class as mw.UploadFromUrlDeedChooser
-                        _this.upload.deedChooser = {
-                            valid : function(){return true;}
-                        }
-                    
-                        // Need to add tipsy tips here 
-                        $j(_this.deedDiv).append( _this.upload.providedFile.licenseMessage );
-    
-                        _this.upload.deedChooser.deed = {
-                                valid : function(){return true;},
-                                getSourceWikiText : function(){},
-                                getAuthorWikiText : function(){},
-                                getLicenseWikiText : function(){
-                                return _this.upload.providedFile.licenseValue
-                            }
-                        }
-                }
-                else{
-                        _this.upload.deedChooser = new mw.UploadWizardDeedChooser(
-                        	_this.deedDiv,
-                        	_this.upload.wizard.getLicensingDeeds(),
-                        	[ _this.upload ]
-                        );
-                    _this.upload.deedChooser.onLayoutReady();
 
-                }
+		// Defining own deedChooser for uploads coming from external service
+		if ( _this.upload.fromURL ) {
+			if( _this.upload.providedFile.license ) {
+				// XXX can be made a seperate class as mw.UploadFromUrlDeedChooser
+				_this.upload.deedChooser = {
+					valid : function(){return true;}
+				}
+
+				// Need to add tipsy tips here 
+				$j(_this.deedDiv).append( _this.upload.providedFile.licenseMessage );
+
+				_this.upload.deedChooser.deed = {
+						valid : function(){return true;},
+						getSourceWikiText : function(){},
+						getAuthorWikiText : function(){},
+						getLicenseWikiText : function(){
+						return _this.upload.providedFile.licenseValue
+					}
+				}
+				}
+		} else {
+			_this.upload.deedChooser = new mw.UploadWizardDeedChooser(
+			_this.deedDiv,
+			_this.upload.wizard.getLicensingDeeds(),
+			[ _this.upload ]
+			);
+			_this.upload.deedChooser.onLayoutReady();
+
+}
 	},
 
 	/**
